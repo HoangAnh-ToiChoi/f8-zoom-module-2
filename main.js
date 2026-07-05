@@ -1,3 +1,7 @@
+import httpRequest from "./src/utils/httpRequest.js";
+import * as login from "./src/auth/login.js";
+import * as register from "./src/auth/register.js";
+import { checkAuthState } from "./src/auth/login.js";
 // Auth Modal Functionality
 document.addEventListener("DOMContentLoaded", function () {
     // Get DOM elements
@@ -72,6 +76,21 @@ document.addEventListener("DOMContentLoaded", function () {
     showSignupBtn.addEventListener("click", function () {
         showSignupForm();
     });
+
+    // Signup form submit
+    signupForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        await register.register();
+        checkAuthState();
+        closeModal();
+    });
+
+    loginForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        await login.handleLogin();
+        checkAuthState();
+        closeModal();
+    });
 });
 
 // User Menu Dropdown Functionality
@@ -114,6 +133,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Other functionality
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     // TODO: Implement other functionality here
 });
