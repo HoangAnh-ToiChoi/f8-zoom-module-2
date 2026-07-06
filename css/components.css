@@ -628,7 +628,10 @@
     position: relative;
     transition: all var(--transition-fast);
 }
-
+.progress-fill,
+.volume-fill {
+    transition: width 0.1s linear;
+}
 .progress-handle,
 .volume-handle {
     position: absolute;

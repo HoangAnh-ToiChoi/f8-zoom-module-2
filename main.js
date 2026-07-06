@@ -103,6 +103,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     albumsGrid.addEventListener("click", albums.playAB);
     artistsGrid.addEventListener("click", artists.playAr);
     trackList.addEventListener("click", player.getMusic);
+    player.handleVolume();
 });
 
 // User Menu Dropdown Functionality
@@ -113,7 +114,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const homeBtn = document.querySelector(".home-btn");
     const logo = document.querySelector(".logo i");
     const playBtn = document.querySelector(".play-btn");
-
+    const shuffleBtn = document.querySelector(".shuffle");
+    const preBtn = document.querySelector(".pre-btn");
+    const nextBtn = document.querySelector(".next-btn");
+    const playBtnLarge = document.querySelector(".play-btn-large");
     // Toggle dropdown when clicking avatar
     userAvatar.addEventListener("click", function (e) {
         e.stopPropagation();
@@ -149,6 +153,14 @@ document.addEventListener("DOMContentLoaded", function () {
     homeBtn.addEventListener("click", hideDetailView);
     logo.addEventListener("click", hideDetailView);
     playBtn.addEventListener("click", player.handleSong);
+    shuffleBtn.addEventListener("click", player.toggleShuffle);
+    nextBtn.addEventListener("click", () => {
+        player.handleForwardSong(1);
+    });
+    preBtn.addEventListener("click", () => {
+        player.handleForwardSong(-1);
+    });
+    playBtnLarge.addEventListener("click", player.handleAllSong);
 });
 
 // Other functionality

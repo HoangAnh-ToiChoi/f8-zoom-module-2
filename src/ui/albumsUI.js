@@ -119,6 +119,7 @@ export function renderTrackbyAB(filteredTracks) {
             const trackItem = document.createElement("div");
             trackItem.classList.add("track-item");
             trackItem.setAttribute("data-id", track.id);
+            trackItem.setAttribute("data-index", index);
             trackList.appendChild(trackItem);
 
             const trackNumber = document.createElement("div");
