@@ -1,9 +1,14 @@
 import httpRequest from "./src/utils/httpRequest.js";
-import * as login from "./src/auth/login.js";
+import * as login from "./src/auth/auth.js";
 import * as register from "./src/auth/register.js";
-import { checkAuthState } from "./src/auth/login.js";
+import * as storage from "./src/utils/stogare.js";
+import * as playlists from "./src/playlists/playlists.js";
+import * as albums from "./src/albums/albums.js";
+import * as artists from "./src/Artists/Artists.js";
+import { hideDetailView } from "./src/utils/uiHelpers.js";
+import * as player from "./src/player/player.js";
 // Auth Modal Functionality
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     // Get DOM elements
     const signupBtn = document.querySelector(".signup-btn");
     const loginBtn = document.querySelector(".login-btn");
@@ -13,6 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const loginForm = document.getElementById("loginForm");
     const showLoginBtn = document.getElementById("showLogin");
     const showSignupBtn = document.getElementById("showSignup");
+    const albumsGrid = document.querySelector(".albums-grid");
+    const artistsGrid = document.querySelector(".artists-grid");
+    const trackList = document.querySelector(".track-list");
 
     // Function to show signup form
     function showSignupForm() {
@@ -81,16 +89,20 @@ document.addEventListener("DOMContentLoaded", function () {
     signupForm.addEventListener("submit", async function (e) {
         e.preventDefault();
         await register.register();
-        checkAuthState();
+        await checkAuthState();
         closeModal();
     });
 
     loginForm.addEventListener("submit", async function (e) {
         e.preventDefault();
         await login.handleLogin();
-        checkAuthState();
+        login.checkAuthState();
         closeModal();
     });
+
+    albumsGrid.addEventListener("click", albums.playAB);
+    artistsGrid.addEventListener("click", artists.playAr);
+    trackList.addEventListener("click", player.getMusic);
 });
 
 // User Menu Dropdown Functionality
@@ -98,11 +110,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const userAvatar = document.getElementById("userAvatar");
     const userDropdown = document.getElementById("userDropdown");
     const logoutBtn = document.getElementById("logoutBtn");
+    const homeBtn = document.querySelector(".home-btn");
+    const logo = document.querySelector(".logo i");
+    const playBtn = document.querySelector(".play-btn");
 
     // Toggle dropdown when clicking avatar
     userAvatar.addEventListener("click", function (e) {
         e.stopPropagation();
-        userDropdown.classList.toggle("show");
+        if (storage.getToken() && storage.getUser()) {
+            userDropdown.classList.toggle("show");
+        }
     });
 
     // Close dropdown when clicking outside
@@ -126,13 +143,19 @@ document.addEventListener("DOMContentLoaded", function () {
     logoutBtn.addEventListener("click", function () {
         // Close dropdown first
         userDropdown.classList.remove("show");
-
-        console.log("Logout clicked");
-        // TODO: Students will implement logout logic here
+        login.handleLogout();
     });
+
+    homeBtn.addEventListener("click", hideDetailView);
+    logo.addEventListener("click", hideDetailView);
+    playBtn.addEventListener("click", player.handleSong);
 });
 
 // Other functionality
 document.addEventListener("DOMContentLoaded", async function () {
     // TODO: Implement other functionality here
+    await login.checkAuthState();
+    await playlists.getPlaylists();
+    await albums.getAlbums();
+    await artists.getArtists();
 });

@@ -1,18 +1,23 @@
 import * as storage from "../utils/stogare.js";
-import { login } from "../api/authApi.js";
-import { showError, clearError } from "../ui/authUI.js";
+import { login, currentUser } from "../api/authApi.js";
+import { showError, clearError, LoginUI, logoutUI } from "../ui/authUI.js";
 
-export function checkAuthState() {
+export async function checkAuthState() {
     const token = storage.getToken();
     const user = storage.getUser();
     if (token && user) {
-        document.querySelector(".auth-buttons").style.display = "none";
-        document.querySelector(".user-avatar img").src =
-            user.avatar || "./src/public/imgs/user.png";
+        LoginUI(user);
+        try {
+            const { user } = await currentUser();
+            if (user) {
+                storage.setUser(user);
+            }
+        } catch (e) {
+            storage.removeAccount();
+            logoutUI();
+        }
     } else {
-        document.querySelector(".auth-buttons").style.display = "flex";
-        document.querySelector(".user-avatar img").src =
-            "../../placeholder.svg?height=32&width=32";
+        logoutUI();
     }
 }
 
@@ -37,4 +42,9 @@ export async function handleLogin() {
             });
         }
     }
+}
+
+export function handleLogout() {
+    storage.removeAccount();
+    logoutUI();
 }

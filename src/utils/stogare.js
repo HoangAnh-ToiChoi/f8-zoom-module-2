@@ -20,7 +20,7 @@ export function getUser(user) {
     return localStorage.getItem(keys.user, JSON.stringify(user));
 }
 
-export function removeToken() {
+export function removeAccount() {
     localStorage.removeItem(keys.accessToken);
     localStorage.removeItem(keys.user);
 }

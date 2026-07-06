@@ -20,3 +20,15 @@ export function clearError(formSelector) {
         });
     }
 }
+
+export function LoginUI(user) {
+    document.querySelector(".auth-buttons").style.display = "none";
+    document.querySelector(".user-avatar img").src =
+        user.avatar || "./src/public/imgs/user.png";
+}
+
+export function logoutUI() {
+    document.querySelector(".auth-buttons").style.display = "flex";
+    document.querySelector(".user-avatar img").src =
+        "../../placeholder.svg?height=32&width=32";
+}
