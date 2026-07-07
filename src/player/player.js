@@ -2,8 +2,20 @@ import { getTracks } from "../api/trackApi.js";
 import { renderMusicPlayer } from "../ui/playerUI.js";
 import { formatDuration } from "../utils/format.js";
 
-const audio = new Audio();
+export const audio = new Audio();
 let currentSong = null;
+let currentTrack = null;
+
+export function isPlaying(type, id) {
+    if (!currentTrack || audio.paused) return false;
+    if (type === "albums") {
+        return currentTrack.album_id === id;
+    }
+    if (type === "artist") {
+        return currentTrack.artist_id === id;
+    }
+    return false;
+}
 
 export async function getMusic(e) {
     const track = e.target.closest(".track-item");
@@ -14,8 +26,13 @@ export async function getMusic(e) {
         const { tracks } = await getTracks();
         const filltracks = tracks.find((tr) => tr.id === trackId);
         renderMusicPlayer(filltracks);
+        currentTrack = filltracks;
         audio.src = filltracks.audio_url;
         audio.play();
+        document.querySelectorAll(".track-item").forEach((track) => {
+            track.classList.remove("playing");
+        });
+        track.classList.add("playing");
         const playBtn = document.querySelector(".play-btn");
         playBtn.innerHTML = `<i class="fas fa-pause"></i>`;
         audio.onloadedmetadata = function () {
@@ -41,29 +58,40 @@ export async function getMusic(e) {
     }
 }
 
-export function handleAllSong(e) {
+export async function handleAllSong(e) {
     const playBtnLarge = document.querySelector(".play-btn-large");
+    const playBtn = document.querySelector(".play-btn");
     if (!playBtnLarge) return;
-    if (audio.paused) {
-        audio.play();
+
+    const detailContainer = document.querySelector(".detail-container");
+    const type = detailContainer?.getAttribute("data-type");
+    const id = detailContainer?.getAttribute("data-id");
+
+    if (!audio.src || !isPlaying(type, id)) {
+        const firstTrack = document.querySelector(
+            `.track-item[data-index="0"]`,
+        );
+        if (firstTrack) firstTrack.click();
         playBtnLarge.innerHTML = `<i class="fas fa-pause"></i>`;
-    } else {
-        audio.pause();
-        playBtnLarge.innerHTML = `<i class="fas fa-play"></i>`;
+        playBtn.innerHTML = `<i class="fas fa-pause"></i>`;
+        return;
     }
 
-    // logic xử lý
+    handleSong();
 }
 
 export function handleSong() {
+    const playBtnLarge = document.querySelector(".play-btn-large");
     const playBtn = document.querySelector(".play-btn");
 
     if (!playBtn) return;
     if (audio.paused) {
         audio.play();
+        playBtnLarge.innerHTML = `<i class="fas fa-pause"></i>`;
         playBtn.innerHTML = `<i class="fas fa-pause"></i>`;
     } else {
         audio.pause();
+        playBtnLarge.innerHTML = `<i class="fas fa-play"></i>`;
         playBtn.innerHTML = `<i class="fas fa-play"></i>`;
     }
 }
@@ -163,4 +191,14 @@ export function handleVolume() {
         audio.volume = volume;
         volumeFill.style.width = `${volume * 100}%`;
     }
+}
+
+export function handleRepeatSong(repeatBtn) {
+    audio.onended = () => {
+        if (repeatBtn.classList.contains("active")) {
+            handleForwardSong(0);
+        } else {
+            handleForwardSong(1);
+        }
+    };
 }

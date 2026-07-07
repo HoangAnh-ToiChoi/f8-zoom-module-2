@@ -49,6 +49,11 @@ export function renderAllArtists(artists) {
 export function rederArChosed(artists) {
     const artistHero = document.querySelector(".artist-hero");
     if (!artistHero) return;
+    const detailContainer = document.querySelector(".detail-container");
+    if (detailContainer) {
+        detailContainer.setAttribute("data-type", "artist");
+        detailContainer.setAttribute("data-id", artists.id);
+    }
 
     // Reset container
     artistHero.innerHTML = "";

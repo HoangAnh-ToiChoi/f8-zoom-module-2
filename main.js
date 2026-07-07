@@ -118,6 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const preBtn = document.querySelector(".pre-btn");
     const nextBtn = document.querySelector(".next-btn");
     const playBtnLarge = document.querySelector(".play-btn-large");
+    const repeatBtn = document.querySelector(".repeat");
     // Toggle dropdown when clicking avatar
     userAvatar.addEventListener("click", function (e) {
         e.stopPropagation();
@@ -161,6 +162,10 @@ document.addEventListener("DOMContentLoaded", function () {
         player.handleForwardSong(-1);
     });
     playBtnLarge.addEventListener("click", player.handleAllSong);
+    repeatBtn.addEventListener("click", () => {
+        repeatBtn.classList.toggle("active");
+        player.handleRepeatSong(repeatBtn);
+    });
 });
 
 // Other functionality

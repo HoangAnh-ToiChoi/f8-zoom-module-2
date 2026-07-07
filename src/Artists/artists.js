@@ -16,9 +16,8 @@ export async function playAr(e) {
     const artists = e.target.closest(".artist-card");
     if (!artists) return;
 
-    showDetailView();
-
     const artistId = artists.getAttribute("data-id");
+    showDetailView("artist", artistId);
     try {
         const response = await artistsApi.getArtistsById(artistId);
         artistsUI.rederArChosed(response);

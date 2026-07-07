@@ -469,6 +469,14 @@
     background-color: var(--bg-tertiary);
 }
 
+.track-item.playing .track-name {
+    color: var(--accent-primary);
+}
+
+.track-item.playing .track-number {
+    color: var(--accent-primary);
+}
+
 .track-number {
     font-size: 16px;
     color: var(--text-secondary);

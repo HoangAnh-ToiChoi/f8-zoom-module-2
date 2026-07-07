@@ -56,6 +56,9 @@ export function renderAllAlbums(albums) {
 export function rederABChosed(album) {
     const artistHero = document.querySelector(".artist-hero");
     if (!artistHero) return;
+    const detailContainer = document.querySelector(".detail-container");
+    detailContainer.setAttribute("data-type", "albums");
+    detailContainer.setAttribute("data-id", album.id);
 
     artistHero.innerHTML = "";
 

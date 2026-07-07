@@ -16,9 +16,8 @@ export async function playAB(e) {
     const hit = e.target.closest(".hit-card");
     if (!hit) return;
     
-    showDetailView();
-
     const albumId = hit.getAttribute("data-id");
+    showDetailView("albums", albumId);
     try {
         const response = await albumApi.getAlbumById(albumId);
         albumsUI.rederABChosed(response);
