@@ -22,6 +22,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     const artistsGrid = document.querySelector(".artists-grid");
     const trackList = document.querySelector(".track-list");
 
+    const currentTrack = localStorage.getItem("currentTrack");
+    const timeCurrent = localStorage.getItem("timeCurrrent");
+
+    if (currentTrack && timeCurrent) {
+        await renderMusicByID(currentTrack);
+    }
     // Function to show signup form
     function showSignupForm() {
         signupForm.style.display = "block";
@@ -119,6 +125,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const nextBtn = document.querySelector(".next-btn");
     const playBtnLarge = document.querySelector(".play-btn-large");
     const repeatBtn = document.querySelector(".repeat");
+    const muteBtn = document.querySelector(".mute-btn");
+
+    const shuffleStored = localStorage.getItem("isShuffle") === "true";
+    const rePeatStored = localStorage.getItem("isRepeat") === "true";
+
+    if (shuffleStored) {
+        shuffleBtn.classList.add("active");
+    }
+
+    if (rePeatStored) {
+        repeatBtn.classList.add("active");
+        player.handleRepeatSong(repeatBtn);
+    }
+
     // Toggle dropdown when clicking avatar
     userAvatar.addEventListener("click", function (e) {
         e.stopPropagation();
@@ -152,19 +172,36 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     homeBtn.addEventListener("click", hideDetailView);
+
     logo.addEventListener("click", hideDetailView);
+
     playBtn.addEventListener("click", player.handleSong);
-    shuffleBtn.addEventListener("click", player.toggleShuffle);
+
+    shuffleBtn.addEventListener("click", () => {
+        player.toggleShuffle();
+        const isShuffle = shuffleBtn.classList.contains("active");
+        localStorage.setItem("isShuffle", isShuffle);
+    });
+
     nextBtn.addEventListener("click", () => {
         player.handleForwardSong(1);
     });
+
     preBtn.addEventListener("click", () => {
         player.handleForwardSong(-1);
     });
+
     playBtnLarge.addEventListener("click", player.handleAllSong);
+
     repeatBtn.addEventListener("click", () => {
         repeatBtn.classList.toggle("active");
+        const isRepeat = repeatBtn.classList.contains("active");
+        localStorage.setItem("isRepeat", isRepeat);
         player.handleRepeatSong(repeatBtn);
+    });
+
+    muteBtn.addEventListener("click", () => {
+        player.handleMute();
     });
 });
 

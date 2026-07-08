@@ -1,4 +1,4 @@
-import { audio, isPlaying } from "../player/player.js";
+import { audio, isPlayingSource } from "../player/player.js";
 
 export function showDetailView(type, id) {
     const hitsSection = document.querySelector(".hits-section");
@@ -17,7 +17,7 @@ export function showDetailView(type, id) {
 
     const playBtnLarge = document.querySelector(".play-btn-large");
     if (playBtnLarge) {
-        if (isPlaying(type, id)) {
+        if (isPlayingSource(type, id)) {
             playBtnLarge.innerHTML = `<i class="fas fa-pause"></i>`;
         } else {
             playBtnLarge.innerHTML = `<i class="fas fa-play"></i>`;

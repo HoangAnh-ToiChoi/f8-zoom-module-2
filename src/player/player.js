@@ -2,11 +2,37 @@ import { getTracks } from "../api/trackApi.js";
 import { renderMusicPlayer } from "../ui/playerUI.js";
 import { formatDuration } from "../utils/format.js";
 
-export const audio = new Audio();
 let currentSong = null;
 let currentTrack = null;
+export const audio = new Audio();
 
-export function isPlaying(type, id) {
+// Handle UI
+
+function setIconUI(isplayingState) {
+    const playBtnLarge = document.querySelector(".play-btn-large");
+    const playBtn = document.querySelector(".play-btn");
+    const iconClass = isplayingState ? "fa-pause" : "fa-play";
+    if (playBtnLarge)
+        playBtnLarge.innerHTML = `<i class="fas ${iconClass}"></i>`;
+    if (playBtn) playBtn.innerHTML = `<i class="fas ${iconClass}"></i>`;
+}
+
+function processBarUI(currentTime, duration) {
+    const processFill = document.querySelector(".progress-fill");
+    const timeCurrent = document.querySelector(
+        ".progress-container .time:first-child",
+    );
+    if (duration && !isNaN(duration)) {
+        const process = (currentTime / duration) * 100;
+        if (processFill) processFill.style.width = `${process}%`;
+    }
+
+    if (timeCurrent) timeCurrent.textContent = formatDuration(currentTime);
+}
+
+// Handle Logic
+
+export function isPlayingSource(type, id) {
     if (!currentTrack || audio.paused) return false;
     if (type === "albums") {
         return currentTrack.album_id === id;
@@ -25,33 +51,40 @@ export async function getMusic(e) {
     try {
         const { tracks } = await getTracks();
         const filltracks = tracks.find((tr) => tr.id === trackId);
+
         renderMusicPlayer(filltracks);
         currentTrack = filltracks;
         audio.src = filltracks.audio_url;
         audio.play();
+        setIconUI(true);
+        localStorage.setItem("currentTrack", JSON.stringify(currentTrack.id));
+        localStorage.setItem("timeCurrrent", JSON.stringify(audio.currentTime));
+
         document.querySelectorAll(".track-item").forEach((track) => {
             track.classList.remove("playing");
         });
         track.classList.add("playing");
-        const playBtn = document.querySelector(".play-btn");
-        playBtn.innerHTML = `<i class="fas fa-pause"></i>`;
+
         audio.onloadedmetadata = function () {
             const timeUpdate = document.querySelector(
                 ".progress-container .time:last-child",
             );
             timeUpdate.textContent = formatDuration(audio.duration);
-        };
-        audio.ontimeupdate = function () {
-            const process = (audio.currentTime / audio.duration) * 100;
-            const progressFill = document.querySelector(".progress-fill");
-            const timeCurrent = document.querySelector(
-                ".progress-container .time:first-child",
+            localStorage.setItem(
+                "currentTrack",
+                JSON.stringify(currentTrack.id),
             );
-
-            if (progressFill) progressFill.style.width = `${process}%`;
-            if (timeCurrent)
-                timeCurrent.textContent = formatDuration(audio.currentTime);
+            localStorage.setItem("timeCurrrent", JSON.stringify(0));
         };
+
+        audio.ontimeupdate = function () {
+            processBarUI(audio.currentTime, audio.duration);
+            localStorage.setItem(
+                "timeCurrrent",
+                JSON.stringify(audio.currentTime),
+            );
+        };
+
         handleProcess();
     } catch (e) {
         console.log(e);
@@ -59,21 +92,16 @@ export async function getMusic(e) {
 }
 
 export async function handleAllSong(e) {
-    const playBtnLarge = document.querySelector(".play-btn-large");
-    const playBtn = document.querySelector(".play-btn");
-    if (!playBtnLarge) return;
-
     const detailContainer = document.querySelector(".detail-container");
     const type = detailContainer?.getAttribute("data-type");
     const id = detailContainer?.getAttribute("data-id");
 
-    if (!audio.src || !isPlaying(type, id)) {
+    if (!audio.src || !isPlayingSource(type, id)) {
         const firstTrack = document.querySelector(
             `.track-item[data-index="0"]`,
         );
         if (firstTrack) firstTrack.click();
-        playBtnLarge.innerHTML = `<i class="fas fa-pause"></i>`;
-        playBtn.innerHTML = `<i class="fas fa-pause"></i>`;
+        setIconUI(true);
         return;
     }
 
@@ -81,37 +109,24 @@ export async function handleAllSong(e) {
 }
 
 export function handleSong() {
-    const playBtnLarge = document.querySelector(".play-btn-large");
-    const playBtn = document.querySelector(".play-btn");
-
-    if (!playBtn) return;
     if (audio.paused) {
         audio.play();
-        playBtnLarge.innerHTML = `<i class="fas fa-pause"></i>`;
-        playBtn.innerHTML = `<i class="fas fa-pause"></i>`;
+        setIconUI(true);
     } else {
         audio.pause();
-        playBtnLarge.innerHTML = `<i class="fas fa-play"></i>`;
-        playBtn.innerHTML = `<i class="fas fa-play"></i>`;
+        setIconUI(false);
     }
 }
 
-export function toggleShuffle() {
-    const shuffleBtn = document.querySelector(".shuffle");
-    if (!shuffleBtn) return;
-    shuffleBtn.classList.toggle("active");
-    handleForwardSong(1);
-}
-
 export function handleForwardSong(step) {
-    const shuffleBtn = document.querySelector(".shuffle active");
-    console.log(shuffleBtn);
+    const shuffleBtn = document.querySelector(".shuffle.active");
     const trackItem = document.querySelectorAll(".track-item");
     let newSong;
+    const length = trackItem.length;
     if (shuffleBtn) {
-        newSong = Math.floor(Math.random() * trackItem.length);
+        newSong = Math.floor(Math.random() * length);
     } else {
-        newSong = (currentSong + step + trackItem.length) % trackItem.length;
+        newSong = (currentSong + step + length) % length;
     }
     const nextTrack = document.querySelector(
         `.track-item[data-index="${newSong}"]`,
@@ -123,68 +138,71 @@ export function handleForwardSong(step) {
 
 function handleProcess() {
     const processBar = document.querySelector(".progress-bar");
-    const progressFill = document.querySelector(".progress-fill");
+    const processFill = document.querySelector(".progress-fill");
+    if (!processBar || !processFill) return;
+
     processBar.addEventListener("mousedown", (e) => {
         audio.pause();
-        updateProcessUI(e);
-        progressFill.style.transition = "none";
+        processFill.style.transition = "none";
+
         const onMouseMove = (e) => {
-            updateProcessUI(e);
+            const rect = processFill.getBoundingClientRect();
+            let radio = (e.clientX - rect.left) / rect.width;
+            if (radio < 0) radio = 0;
+            if (radio > 1) radio = 1;
+            processBarUI(radio * audio.duration, audio.duration);
         };
 
         const onMouseUp = (e) => {
             const rect = processBar.getBoundingClientRect();
-            audio.currentTime =
-                ((e.clientX - rect.left) / processBar.clientWidth) *
-                audio.duration;
-            const playBtn = document.querySelector(".play-btn");
+            let radio = (e.clientX - rect.left) / rect.width;
+            if (radio < 0) radio = 0;
+            if (radio > 1) radio = 1;
+            audio.currentTime = radio * audio.duration;
             audio.play();
-            playBtn.innerHTML = `<i class="fas fa-pause"></i>`;
+            setIconUI(true);
+            processFill.style.transition = "";
+
             document.removeEventListener("mousemove", onMouseMove);
             document.removeEventListener("mouseup", onMouseUp);
         };
+
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
     });
-
-    function updateProcessUI(e) {
-        const rect = processBar.getBoundingClientRect();
-        const offsetX = e.clientX - rect.left;
-        let process = (offsetX / processBar.clientWidth) * 100;
-        if (process < 0) process = 0;
-        if (process > 100) process = 100;
-        const progressFill = document.querySelector(".progress-fill");
-        const timeCurrent = document.querySelector(
-            ".progress-container .time:first-child",
-        );
-        progressFill.style.width = `${process}%`;
-        timeCurrent.textContent = formatDuration(audio.currentTime);
-    }
 }
 
 export function handleVolume() {
     const volumeBar = document.querySelector(".volume-bar");
     const volumeFill = document.querySelector(".volume-fill");
+
     if (!volumeBar || !volumeFill) return;
+
     volumeBar.addEventListener("mousedown", (e) => {
-        updateVolumeUI(e);
+        updateVolumeUI(e.clientX);
         volumeFill.style.transition = "none";
+
         const onMouseMove = (e) => {
-            updateVolumeUI(e);
+            updateVolumeUI(e.clientX);
         };
+
         const onMouseUp = (e) => {
             const rect = volumeBar.getBoundingClientRect();
-            audio.volume = (e.clientX - rect.left) / rect.width;
+            let radio = (e.clientX - rect.left) / rect.width;
+            if (radio < 0) radio = 0;
+            if (radio > 1) radio = 1;
+            audio.volume = radio;
             document.removeEventListener("mousemove", onMouseMove);
             document.removeEventListener("mouseup", onMouseUp);
         };
+
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
     });
-    function updateVolumeUI(e) {
+    function updateVolumeUI(clientX) {
         const rect = volumeBar.getBoundingClientRect();
 
-        const offsetX = e.clientX - rect.left;
+        const offsetX = clientX - rect.left;
         let volume = offsetX / rect.width;
         if (volume < 0) volume = 0;
         if (volume > 1) volume = 1;
@@ -201,4 +219,32 @@ export function handleRepeatSong(repeatBtn) {
             handleForwardSong(1);
         }
     };
+}
+
+export function handleMute() {
+    const muteBtn = document.querySelector(".mute-btn");
+    const volumeContainer = document.querySelector(".volume-container");
+    if (!muteBtn) return;
+
+    audio.muted = !audio.muted;
+
+    const volumeFill = document.querySelector(".volume-fill");
+    const volumeBar = document.querySelector(".volume-bar");
+    const icon = volumeContainer.querySelector("i");
+    if (!volumeFill || !volumeBar || !icon) return;
+
+    volumeFill.style.width = audio.muted ? "0%" : "100%";
+
+    if (audio.muted) {
+        icon.className = "fas fa-volume-mute";
+    } else {
+        icon.className = "fas fa-volume-down";
+    }
+}
+
+export function toggleShuffle() {
+    const shuffleBtn = document.querySelector(".shuffle");
+    if (!shuffleBtn) return;
+    shuffleBtn.classList.toggle("active");
+    handleForwardSong(1);
 }

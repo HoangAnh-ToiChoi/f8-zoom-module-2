@@ -33,3 +33,10 @@ export function renderMusicPlayer(track) {
     btnAdd.appendChild(icon);
     playerLeft.appendChild(btnAdd);
 }
+
+export async function renderMusicByID(id) {
+    const track = await getTrackByID(id);
+    renderMusicPlayer(track);
+    audio.src = track.audio_url;
+    audio.currentTime = timeCurrent;
+}
