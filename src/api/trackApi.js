@@ -7,3 +7,7 @@ export async function getTracks() {
 export async function getTrackByID(id) {
     return await httpRequest.get(`tracks/${id}`);
 }
+
+export async function putTrackStart(data) {
+    return await httpRequest.put("me/player/play", data);
+}

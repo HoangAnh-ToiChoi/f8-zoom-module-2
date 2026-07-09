@@ -180,6 +180,7 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: var(--spacing-md);
+    position: relative; /* Thêm để neo vị trí dropdown */
 }
 
 .search-library-btn {
@@ -1108,4 +1109,175 @@
     overflow: hidden;
     text-overflow: ellipsis;
     font-weight: 400;
+}
+
+/* Context Menu */
+.context-menu {
+    position: absolute;
+    background-color: #282828;
+    min-width: 220px;
+    border-radius: 4px;
+    box-shadow:
+        0 16px 24px rgba(0, 0, 0, 0.5),
+        0 6px 8px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    padding: 4px;
+}
+
+.context-menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.context-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    color: #e0e0e0;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 2px;
+    transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.context-menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.context-menu-item i {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+/* Special Icons Color */
+.context-menu-item i.fa-times {
+    color: var(--accent-primary); /* Icon X màu xanh lá Spotify */
+}
+
+.context-menu-item i.fa-ban,
+.context-menu-item i.fa-trash-alt {
+    color: #b3b3b3;
+}
+
+/* Library Filter Dropdown */
+.library-filter-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    display: none;
+    margin-top: 8px;
+    background-color: #282828;
+    min-width: 240px;
+    border-radius: 8px;
+    box-shadow:
+        0 16px 24px rgba(0, 0, 0, 0.5),
+        0 6px 8px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    padding: 12px 6px;
+}
+
+.library-filter-dropdown.active {
+    display: block;
+}
+
+.dropdown-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown-header {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    padding: 8px 12px;
+    letter-spacing: 0.5px;
+}
+
+.dropdown-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    color: #e0e0e0;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 4px;
+    transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.dropdown-item.active {
+    color: var(--accent-primary); /* Chữ màu xanh lá khi active */
+}
+
+.dropdown-item.active i {
+    color: var(--accent-primary); /* Icon Check màu xanh lá */
+    font-size: 14px;
+}
+
+.dropdown-divider {
+    border: none;
+    border-top: 1px solid #3e3e3e;
+    margin: 8px 12px;
+}
+
+/* View modes container */
+.view-modes-container {
+    display: flex;
+    background-color: #181818;
+    border-radius: 6px;
+    padding: 4px;
+    justify-content: space-between;
+    margin: 4px 12px 0 12px;
+}
+
+.view-mode-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    border: none;
+    background-color: transparent;
+    color: var(--text-secondary);
+    border-radius: 4px;
+    cursor: pointer;
+    transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.view-mode-btn:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.view-mode-btn.active {
+    background-color: #3e3e3e; /* Nền xám nhạt active */
+    color: #ffffff;
+}
+
+/* Làm cho icon active đầu tiên có màu xanh lá */
+.view-mode-btn.active i.fa-bars {
+    color: var(--accent-primary);
 }

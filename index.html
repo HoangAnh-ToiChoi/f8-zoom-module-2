@@ -49,6 +49,48 @@
                         </button>
                     </div>
 
+                    <!-- Library Filter Dropdown -->
+                    <div class="library-filter-dropdown">
+                        <div class="dropdown-section">
+                            <span class="dropdown-header">Sắp xếp theo</span>
+                            <ul class="dropdown-list">
+                                <li class="dropdown-item active">
+                                    <span>Gần đây</span>
+                                    <i class="fas fa-check"></i>
+                                </li>
+                                <li class="dropdown-item">
+                                    <span>Mới thêm gần đây</span>
+                                </li>
+                                <li class="dropdown-item">
+                                    <span>Thứ tự chữ cái</span>
+                                </li>
+                                <li class="dropdown-item">
+                                    <span>Người sáng tạo</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <hr class="dropdown-divider" />
+
+                        <div class="dropdown-section">
+                            <span class="dropdown-header">Xem dưới dạng</span>
+                            <div class="view-modes-container">
+                                <button class="view-mode-btn active">
+                                    <i class="fas fa-bars"></i>
+                                </button>
+                                <button class="view-mode-btn">
+                                    <i class="fas fa-list"></i>
+                                </button>
+                                <button class="view-mode-btn">
+                                    <i class="fas fa-th-large"></i>
+                                </button>
+                                <button class="view-mode-btn">
+                                    <i class="fas fa-th"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="library-content">
                         <div class="library-item active">
                             <div class="item-icon liked-songs">
@@ -182,6 +224,15 @@
                         </div>
                         <div class="artists-grid"></div>
                     </section>
+
+                    <!-- Context Menu -->
+                    <div
+                        id="context-menu"
+                        class="context-menu"
+                        style="display: none"
+                    >
+                        <ul class="context-menu-list"></ul>
+                    </div>
 
                     <!-- Detail Container (Hidden by default) -->
                     <div class="detail-container" style="display: none">

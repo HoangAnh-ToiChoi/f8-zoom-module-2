@@ -2,11 +2,12 @@ import httpRequest from "./src/utils/httpRequest.js";
 import * as login from "./src/auth/auth.js";
 import * as register from "./src/auth/register.js";
 import * as storage from "./src/utils/stogare.js";
-import * as playlists from "./src/playlists/playlists.js";
-import * as albums from "./src/albums/albums.js";
-import * as artists from "./src/Artists/Artists.js";
-import { hideDetailView } from "./src/utils/uiHelpers.js";
-import * as player from "./src/player/player.js";
+import * as playlists from "./src/controllers/playlists.js";
+import * as albums from "./src/controllers/albums.js";
+import * as artists from "./src/controllers/artists.js";
+import { hideDetailView, showLibraryFilter } from "./src/utils/uiHelpers.js";
+import * as player from "./src/controllers/player.js";
+
 // Auth Modal Functionality
 document.addEventListener("DOMContentLoaded", async function () {
     // Get DOM elements
@@ -25,9 +26,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     const currentTrack = localStorage.getItem("currentTrack");
     const timeCurrent = localStorage.getItem("timeCurrrent");
 
-    if (currentTrack && timeCurrent) {
-        await renderMusicByID(currentTrack);
-    }
+    // if (currentTrack && timeCurrent) {
+    //     await renderMusicByID(currentTrack);
+    // }
     // Function to show signup form
     function showSignupForm() {
         signupForm.style.display = "block";
@@ -126,6 +127,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const playBtnLarge = document.querySelector(".play-btn-large");
     const repeatBtn = document.querySelector(".repeat");
     const muteBtn = document.querySelector(".mute-btn");
+    const sortBtn = document.querySelector(".sort-btn");
 
     const shuffleStored = localStorage.getItem("isShuffle") === "true";
     const rePeatStored = localStorage.getItem("isRepeat") === "true";
@@ -202,6 +204,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     muteBtn.addEventListener("click", () => {
         player.handleMute();
+    });
+
+    sortBtn.addEventListener("click", () => {
+        showLibraryFilter();
     });
 });
 

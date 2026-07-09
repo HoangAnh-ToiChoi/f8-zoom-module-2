@@ -162,7 +162,6 @@ function handleProcess() {
             audio.play();
             setIconUI(true);
             processFill.style.transition = "";
-
             document.removeEventListener("mousemove", onMouseMove);
             document.removeEventListener("mouseup", onMouseUp);
         };

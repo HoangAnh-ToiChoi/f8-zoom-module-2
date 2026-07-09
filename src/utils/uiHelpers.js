@@ -1,4 +1,4 @@
-import { audio, isPlayingSource } from "../player/player.js";
+import { audio, isPlayingSource } from "../controllers/player.js";
 
 export function showDetailView(type, id) {
     const hitsSection = document.querySelector(".hits-section");
@@ -35,4 +35,18 @@ export function hideDetailView() {
     if (albumsSection) albumsSection.style.display = "block";
     if (artistsSection) artistsSection.style.display = "block";
     if (detailContainer) detailContainer.style.display = "none";
+}
+
+export function showLibraryFilter() {
+    const libraryFilterDropdown = document.querySelector(
+        ".library-filter-dropdown",
+    );
+    if (libraryFilterDropdown) libraryFilterDropdown.classList.toggle("active");
+}
+
+export function hideLibraryFilter() {
+    const libraryFilterDropdown = document.querySelector(
+        ".library-filter-dropdown",
+    );
+    if (libraryFilterDropdown) libraryFilterDropdown.classList.remove("active");
 }
