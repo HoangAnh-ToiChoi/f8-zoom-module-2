@@ -1281,3 +1281,410 @@
 .view-mode-btn.active i.fa-bars {
     color: var(--accent-primary);
 }
+
+/* Playlist Detail View */
+.playlist-detail-container {
+    display: none;
+    padding: 24px;
+}
+
+.playlist-hero {
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+    padding: 24px 0 24px 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    cursor: pointer; /* Cho phép click vào banner để mở modal */
+}
+
+.playlist-cover {
+    width: 232px;
+    height: 232px;
+    min-width: 232px;
+    background-color: #282828;
+    box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.playlist-cover i.fa-music {
+    font-size: 80px;
+    color: #7f7f7f;
+}
+
+.playlist-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.playlist-hero-info {
+    display: flex;
+    flex-direction: column;
+    color: var(--text-primary);
+}
+
+.playlist-type {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+}
+
+.playlist-title {
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin: 0 0 16px 0;
+    word-break: break-word;
+    letter-spacing: -0.04em;
+}
+
+.playlist-owner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.owner-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Playlist Controls */
+.playlist-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 0;
+}
+
+.controls-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.playlist-control-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 24px;
+    cursor: pointer;
+    transition:
+        color var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.playlist-control-btn:hover {
+    color: var(--text-primary);
+    transform: scale(1.05);
+}
+
+.playlist-view-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.playlist-view-btn:hover {
+    color: var(--text-primary);
+}
+
+/* Playlist Search Section (Bottom) */
+.playlist-search-section {
+    border-top: 1px solid #282828;
+    padding-top: 32px;
+    margin-top: 16px;
+}
+
+.playlist-search-section .search-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+}
+
+.playlist-search-box {
+    position: relative;
+    max-width: 400px;
+}
+
+.playlist-search-box .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+.playlist-search-box input {
+    width: 100%;
+    padding: 14px 40px 14px 44px;
+    border-radius: 4px;
+    border: none;
+    background-color: #2a2a2a;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    transition: background-color var(--transition-fast);
+}
+
+.playlist-search-box input:focus {
+    background-color: #3e3e3e;
+}
+
+.clear-search-btn {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.clear-search-btn:hover {
+    color: var(--text-primary);
+}
+
+/* Playlist Edit Modal Container Styling */
+#playlist-edit-modal {
+    display: none;
+}
+
+.playlist-modal-container {
+    position: relative;
+    background-color: #282828;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 524px; /* Rộng chuẩn Spotify */
+    padding: 24px;
+    box-shadow: 0 24px 32px rgba(0, 0, 0, 0.6);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+.playlist-modal-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--text-primary);
+    margin: 0 0 24px 0;
+    letter-spacing: -0.02em;
+}
+
+.playlist-modal-body {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+/* Image Picker (Left side) */
+.playlist-image-picker {
+    width: 180px;
+    height: 180px;
+    min-width: 180px;
+    background-color: #3e3e3e;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.playlist-image-picker img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.playlist-image-picker i.fa-music {
+    font-size: 64px;
+    color: #7f7f7f;
+}
+
+.picker-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.playlist-image-picker:hover .picker-overlay {
+    opacity: 1;
+}
+
+.picker-overlay i {
+    font-size: 32px;
+    color: #ffffff;
+}
+
+.picker-overlay span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+/* Forms Fields (Right side) */
+.playlist-form-fields {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.floating-label {
+    position: relative;
+    background-color: #3e3e3e;
+    border-radius: 4px;
+    padding: 8px 12px;
+    border: 1px solid transparent;
+    transition: background-color var(--transition-fast);
+}
+
+.floating-label:focus-within {
+    border-color: #535353;
+    background-color: #4a4a4a;
+}
+
+.floating-label .input-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: 2px;
+    user-select: none;
+}
+
+.floating-label input {
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0;
+}
+
+.playlist-form-fields textarea {
+    width: 100%;
+    height: 122px;
+    background-color: #3e3e3e;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: var(--text-primary);
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    resize: none;
+    font-family: inherit;
+    transition:
+        border-color var(--transition-fast),
+        background-color var(--transition-fast);
+}
+
+.playlist-form-fields textarea:focus {
+    border-color: #535353;
+    background-color: #4a4a4a;
+}
+
+/* Modal Footer */
+.playlist-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.playlist-visibility-toggle {
+    background-color: transparent;
+    border: 1px solid #727272;
+    border-radius: 500px;
+    color: var(--text-primary);
+    padding: 8px 20px;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition:
+        transform var(--transition-fast),
+        border-color var(--transition-fast);
+}
+
+.playlist-visibility-toggle:hover {
+    transform: scale(1.04);
+    border-color: #ffffff;
+}
+
+.playlist-save-btn {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 500px;
+    color: #000000;
+    padding: 16px 36px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform var(--transition-fast);
+}
+
+.playlist-save-btn:hover {
+    transform: scale(1.04);
+}
+
+/* Disclaimer text at bottom */
+.playlist-modal-disclaimer {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Playlist description in hero details */
+.playlist-description {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin: 8px 0 0 0;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

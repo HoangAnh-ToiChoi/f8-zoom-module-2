@@ -84,6 +84,14 @@ export async function getMusic(e) {
                 JSON.stringify(audio.currentTime),
             );
         };
+        audio.onended = () => {
+            const repeatActive = document.querySelector(".repeat.active");
+            if (repeatActive) {
+                handleForwardSong(0);
+            } else {
+                handleForwardSong(1);
+            }
+        };
 
         handleProcess();
     } catch (e) {
@@ -124,7 +132,9 @@ export function handleForwardSong(step) {
     let newSong;
     const length = trackItem.length;
     if (shuffleBtn) {
-        newSong = Math.floor(Math.random() * length);
+        do {
+            newSong = Math.floor(Math.random() * length);
+        } while (newSong === currentSong);
     } else {
         newSong = (currentSong + step + length) % length;
     }
@@ -210,14 +220,9 @@ export function handleVolume() {
     }
 }
 
-export function handleRepeatSong(repeatBtn) {
-    audio.onended = () => {
-        if (repeatBtn.classList.contains("active")) {
-            handleForwardSong(0);
-        } else {
-            handleForwardSong(1);
-        }
-    };
+export function handleRepeatSong() {
+    const repeatBtn = document.querySelector(".repeat");
+    repeatBtn.classList.toggle("active");
 }
 
 export function handleMute() {
@@ -245,5 +250,4 @@ export function toggleShuffle() {
     const shuffleBtn = document.querySelector(".shuffle");
     if (!shuffleBtn) return;
     shuffleBtn.classList.toggle("active");
-    handleForwardSong(1);
 }

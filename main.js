@@ -5,8 +5,9 @@ import * as storage from "./src/utils/stogare.js";
 import * as playlists from "./src/controllers/playlists.js";
 import * as albums from "./src/controllers/albums.js";
 import * as artists from "./src/controllers/artists.js";
-import { hideDetailView, showLibraryFilter } from "./src/utils/uiHelpers.js";
+import { hideDetailView } from "./src/utils/uiHelpers.js";
 import * as player from "./src/controllers/player.js";
+import * as slidebar from "./src/controllers/slidebar.js";
 
 // Auth Modal Functionality
 document.addEventListener("DOMContentLoaded", async function () {
@@ -138,7 +139,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (rePeatStored) {
         repeatBtn.classList.add("active");
-        player.handleRepeatSong(repeatBtn);
     }
 
     // Toggle dropdown when clicking avatar
@@ -196,19 +196,15 @@ document.addEventListener("DOMContentLoaded", function () {
     playBtnLarge.addEventListener("click", player.handleAllSong);
 
     repeatBtn.addEventListener("click", () => {
-        repeatBtn.classList.toggle("active");
+        player.handleRepeatSong();
         const isRepeat = repeatBtn.classList.contains("active");
         localStorage.setItem("isRepeat", isRepeat);
-        player.handleRepeatSong(repeatBtn);
     });
 
-    muteBtn.addEventListener("click", () => {
-        player.handleMute();
-    });
+    muteBtn.addEventListener("click", player.handleMute);
 
-    sortBtn.addEventListener("click", () => {
-        showLibraryFilter();
-    });
+    sortBtn.addEventListener("click", slidebar.handleLibrary);
+    slidebar.createPlayplist();
 });
 
 // Other functionality
@@ -216,6 +212,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // TODO: Implement other functionality here
     await login.checkAuthState();
     await playlists.getPlaylists();
+    await slidebar.initLibrary();
     await albums.getAlbums();
     await artists.getArtists();
 });

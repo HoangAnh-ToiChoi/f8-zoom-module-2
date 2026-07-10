@@ -43,3 +43,51 @@ export function renderAllPlaylists(playlists) {
         console.log(e);
     }
 }
+
+export function renderPlaylistDetail(playlist) {
+    const detailContainer = document.querySelector(".playlist-detail-container");
+    if (!detailContainer || !playlist) return;
+
+    // Cập nhật thuộc tính định danh
+    detailContainer.setAttribute("data-id", playlist.id || "");
+    detailContainer.setAttribute("data-type", "playlists");
+
+    // 1. Cập nhật ảnh bìa
+    const coverIcon = detailContainer.querySelector(".playlist-cover i.fa-music");
+    const coverImg = detailContainer.querySelector("#playlist-hero-img");
+    
+    if (playlist.image_url) {
+        if (coverImg) {
+            coverImg.src = playlist.image_url;
+            coverImg.style.display = "block";
+        }
+        if (coverIcon) coverIcon.style.display = "none";
+    } else {
+        if (coverImg) coverImg.style.display = "none";
+        if (coverIcon) coverIcon.style.display = "block";
+    }
+
+    // 2. Cập nhật thông tin text
+    const typeTxt = detailContainer.querySelector("#playlist-hero-type");
+    const titleTxt = detailContainer.querySelector("#playlist-hero-title");
+    
+    if (typeTxt) {
+        typeTxt.textContent = playlist.is_public ? "Danh sách phát công khai" : "Danh sách phát riêng tư";
+    }
+    if (titleTxt) {
+        titleTxt.textContent = playlist.name || "Danh sách phát của tôi";
+    }
+
+    // Hiển thị phần chi tiết playlist và ẩn các mục khác
+    const hitsSection = document.querySelector(".hits-section");
+    const albumsSection = document.querySelector(".albums-section");
+    const artistsSection = document.querySelector(".artists-section");
+    const artistDetailContainer = document.querySelector(".detail-container");
+
+    if (hitsSection) hitsSection.style.display = "none";
+    if (albumsSection) albumsSection.style.display = "none";
+    if (artistsSection) artistsSection.style.display = "none";
+    if (artistDetailContainer) artistDetailContainer.style.display = "none";
+    
+    detailContainer.style.display = "block";
+}

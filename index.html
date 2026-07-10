@@ -47,46 +47,49 @@
                             Recents
                             <i class="fas fa-list"></i>
                         </button>
-                    </div>
+                        <!-- Library Filter Dropdown -->
+                        <div class="library-filter-dropdown">
+                            <div class="dropdown-section">
+                                <span class="dropdown-header"
+                                    >Sắp xếp theo</span
+                                >
+                                <ul class="dropdown-list">
+                                    <li class="dropdown-item active">
+                                        <span>Gần đây</span>
+                                        <i class="fas fa-check"></i>
+                                    </li>
+                                    <li class="dropdown-item">
+                                        <span>Mới thêm gần đây</span>
+                                    </li>
+                                    <li class="dropdown-item">
+                                        <span>Thứ tự chữ cái</span>
+                                    </li>
+                                    <li class="dropdown-item">
+                                        <span>Người sáng tạo</span>
+                                    </li>
+                                </ul>
+                            </div>
 
-                    <!-- Library Filter Dropdown -->
-                    <div class="library-filter-dropdown">
-                        <div class="dropdown-section">
-                            <span class="dropdown-header">Sắp xếp theo</span>
-                            <ul class="dropdown-list">
-                                <li class="dropdown-item active">
-                                    <span>Gần đây</span>
-                                    <i class="fas fa-check"></i>
-                                </li>
-                                <li class="dropdown-item">
-                                    <span>Mới thêm gần đây</span>
-                                </li>
-                                <li class="dropdown-item">
-                                    <span>Thứ tự chữ cái</span>
-                                </li>
-                                <li class="dropdown-item">
-                                    <span>Người sáng tạo</span>
-                                </li>
-                            </ul>
-                        </div>
+                            <hr class="dropdown-divider" />
 
-                        <hr class="dropdown-divider" />
-
-                        <div class="dropdown-section">
-                            <span class="dropdown-header">Xem dưới dạng</span>
-                            <div class="view-modes-container">
-                                <button class="view-mode-btn active">
-                                    <i class="fas fa-bars"></i>
-                                </button>
-                                <button class="view-mode-btn">
-                                    <i class="fas fa-list"></i>
-                                </button>
-                                <button class="view-mode-btn">
-                                    <i class="fas fa-th-large"></i>
-                                </button>
-                                <button class="view-mode-btn">
-                                    <i class="fas fa-th"></i>
-                                </button>
+                            <div class="dropdown-section">
+                                <span class="dropdown-header"
+                                    >Xem dưới dạng</span
+                                >
+                                <div class="view-modes-container">
+                                    <button class="view-mode-btn active">
+                                        <i class="fas fa-bars"></i>
+                                    </button>
+                                    <button class="view-mode-btn">
+                                        <i class="fas fa-list"></i>
+                                    </button>
+                                    <button class="view-mode-btn">
+                                        <i class="fas fa-th-large"></i>
+                                    </button>
+                                    <button class="view-mode-btn">
+                                        <i class="fas fa-th"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -252,6 +255,85 @@
                             <div class="track-list"></div>
                         </section>
                     </div>
+
+                    <!-- Playlist Detail Container (Hidden by default) -->
+                    <div class="playlist-detail-container">
+                        <!-- Playlist Hero Section -->
+                        <section
+                            class="playlist-hero"
+                            id="playlist-cover-trigger"
+                        >
+                            <div class="playlist-cover">
+                                <i class="fas fa-music"></i>
+                                <img
+                                    src=""
+                                    alt="Playlist Cover"
+                                    style="display: none"
+                                    id="playlist-hero-img"
+                                />
+                            </div>
+                            <div class="playlist-hero-info">
+                                <span
+                                    class="playlist-type"
+                                    id="playlist-hero-type"
+                                    >Danh sách phát công khai</span
+                                >
+                                <h1
+                                    class="playlist-title"
+                                    id="playlist-hero-title"
+                                >
+                                    Danh sách phát của tôi
+                                </h1>
+                                <p class="playlist-description" id="playlist-hero-desc" style="display: none;"></p>
+                                <div class="playlist-owner">
+                                    <img
+                                        src="./src/public/imgs/user.png"
+                                        alt="Avatar"
+                                        class="owner-avatar"
+                                    />
+                                    <span class="owner-name">Hoàng Anh</span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Playlist Controls -->
+                        <section class="playlist-controls">
+                            <div class="controls-left">
+                                <button class="playlist-control-btn">
+                                    <i class="fas fa-user-plus"></i>
+                                </button>
+                                <button class="playlist-control-btn">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                            </div>
+                            <div class="controls-right">
+                                <button class="playlist-view-btn">
+                                    Danh sách <i class="fas fa-list"></i>
+                                </button>
+                            </div>
+                        </section>
+
+                        <!-- Search Section for Playlist Content -->
+                        <section class="playlist-search-section">
+                            <h2 class="search-title">
+                                Hãy cùng tìm nội dung cho danh sách phát của bạn
+                            </h2>
+                            <div class="playlist-search-box">
+                                <i class="fas fa-search search-icon"></i>
+                                <input
+                                    type="text"
+                                    placeholder="Tìm bài hát và tập podcast"
+                                    id="playlist-search-input"
+                                />
+                                <button
+                                    class="clear-search-btn"
+                                    style="display: none"
+                                >
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </section>
+                    </div>
                 </div>
             </main>
 
@@ -264,10 +346,8 @@
                         class="player-image"
                     />
                     <div class="player-info">
-                        <div class="player-title">
-                            Yêu Một Người Sao Buồn Đến Thế
-                        </div>
-                        <div class="player-artist">Noo Phước Thịnh</div>
+                        <div class="player-title">Unknown Song</div>
+                        <div class="player-artist">Unknown Artist</div>
                     </div>
                     <button class="add-btn">
                         <i class="fa-solid fa-plus"></i>
@@ -293,13 +373,13 @@
                         </button>
                     </div>
                     <div class="progress-container">
-                        <span class="time">0:52</span>
+                        <span class="time">0:00</span>
                         <div class="progress-bar">
                             <div class="progress-fill">
                                 <div class="progress-handle"></div>
                             </div>
                         </div>
-                        <span class="time">4:59</span>
+                        <span class="time">0:00</span>
                     </div>
                 </div>
 
@@ -425,6 +505,90 @@
                             </button>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Playlist Details Modal -->
+        <div class="modal-overlay" id="playlist-edit-modal">
+            <div class="playlist-modal-container">
+                <button class="modal-close" id="playlist-edit-close">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <div class="playlist-modal-content">
+                    <h2 class="playlist-modal-title">Sửa thông tin chi tiết</h2>
+                    <div class="playlist-modal-body">
+                        <!-- Left column: Cover Image Selector -->
+                        <div
+                            class="playlist-image-picker"
+                            id="playlist-image-picker-btn"
+                        >
+                            <div class="picker-placeholder">
+                                <i class="fas fa-music"></i>
+                            </div>
+                            <img
+                                src=""
+                                alt="Selected Cover"
+                                style="display: none"
+                                id="playlist-modal-preview-img"
+                            />
+                            <div class="picker-overlay">
+                                <i class="fas fa-pencil-alt"></i>
+                                <span>Chọn ảnh</span>
+                            </div>
+                            <!-- Hidden File Input -->
+                            <input
+                                type="file"
+                                id="playlist-file-input"
+                                accept="image/*"
+                                style="display: none"
+                            />
+                        </div>
+
+                        <!-- Right column: Forms -->
+                        <div class="playlist-form-fields">
+                            <div class="form-group floating-label">
+                                <span class="input-label">Tên</span>
+                                <input
+                                    type="text"
+                                    id="playlist-name-input"
+                                    class="form-input"
+                                    placeholder="Tên danh sách phát"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <textarea
+                                    id="playlist-desc-input"
+                                    class="form-input"
+                                    placeholder="Thêm phần mô tả không bắt buộc"
+                                ></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer of Edit Modal -->
+                    <div class="playlist-modal-footer">
+                        <button
+                            class="playlist-visibility-toggle"
+                            id="playlist-visibility-btn"
+                        >
+                            <i class="fas fa-lock"></i>
+                            <span>Đặt thành riêng tư</span>
+                        </button>
+                        <button
+                            class="playlist-save-btn"
+                            id="playlist-save-btn"
+                        >
+                            Lưu
+                        </button>
+                    </div>
+
+                    <p class="playlist-modal-disclaimer">
+                        Bằng cách tiếp tục, bạn đồng ý cho phép Spotify truy cập
+                        vào hình ảnh bạn đã chọn để tải lên. Vui lòng đảm bảo
+                        bạn có quyền tải lên hình ảnh.
+                    </p>
                 </div>
             </div>
         </div>
