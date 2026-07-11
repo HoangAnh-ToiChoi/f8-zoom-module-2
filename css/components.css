@@ -1688,3 +1688,116 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+/* Custom Context Menu chuẩn Spotify */
+.custom-context-menu {
+    position: fixed;
+    background-color: #282828;
+    border-radius: 4px;
+    padding: 4px;
+    min-width: 220px;
+    box-shadow:
+        0 16px 24px rgba(0, 0, 0, 0.5),
+        0 6px 8px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+}
+
+.custom-context-menu .menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.custom-context-menu .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    color: #eaeaea;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 2px;
+    user-select: none;
+    transition: background-color 0.15s ease;
+}
+
+.custom-context-menu .menu-item:hover {
+    background-color: #3e3e3e;
+    color: #ffffff;
+}
+
+.custom-context-menu .menu-item i {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.custom-context-menu .menu-item i.icon-unfollow {
+    color: #1db954;
+}
+
+.custom-context-menu .menu-item i.icon-dont-play {
+    color: #b3b3b3;
+}
+
+/* Toast Notification Container */
+.toast-container {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none;
+}
+
+/* Toast Card */
+.toast-card {
+    background-color: #2e77d0;
+    color: #ffffff;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 250px;
+    justify-content: center;
+    pointer-events: auto;
+    
+    /* Hiệu ứng trượt lên và mờ dần */
+    animation: toastSlideUp 0.3s ease forwards, toastFadeOut 0.3s ease 2.7s forwards;
+}
+
+.toast-card.success {
+    background-color: #1ed760;
+}
+
+.toast-card.error {
+    background-color: #e91429;
+}
+
+@keyframes toastSlideUp {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes toastFadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}

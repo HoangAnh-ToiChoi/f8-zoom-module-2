@@ -32,9 +32,11 @@ export function hideDetailView() {
     const albumsSection = document.querySelector(".albums-section");
     const artistsSection = document.querySelector(".artists-section");
     const detailContainer = document.querySelector(".detail-container");
+    const playlistDetailContainer = document.querySelector(".playlist-detail-container");
 
     if (hitsSection) hitsSection.style.display = "block";
     if (albumsSection) albumsSection.style.display = "block";
     if (artistsSection) artistsSection.style.display = "block";
     if (detailContainer) detailContainer.style.display = "none";
+    if (playlistDetailContainer) playlistDetailContainer.style.display = "none";
 }

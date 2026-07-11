@@ -15,6 +15,7 @@
 
 /* Sidebar */
 .sidebar {
+    position: relative;
     grid-area: sidebar;
     background-color: var(--bg-secondary);
     border-radius: var(--radius-md);

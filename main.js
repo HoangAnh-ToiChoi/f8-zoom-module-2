@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const albumsGrid = document.querySelector(".albums-grid");
     const artistsGrid = document.querySelector(".artists-grid");
     const trackList = document.querySelector(".track-list");
-
+    const hitsGrid = document.querySelector(".hits-grid");
     const currentTrack = localStorage.getItem("currentTrack");
     const timeCurrent = localStorage.getItem("timeCurrrent");
 
@@ -111,6 +111,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     albumsGrid.addEventListener("click", albums.playAB);
     artistsGrid.addEventListener("click", artists.playAr);
     trackList.addEventListener("click", player.getMusic);
+    hitsGrid.addEventListener("click", playlists.ChosePlaylist);
     player.handleVolume();
 });
 
@@ -129,6 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const repeatBtn = document.querySelector(".repeat");
     const muteBtn = document.querySelector(".mute-btn");
     const sortBtn = document.querySelector(".sort-btn");
+    const slideContent = document.querySelector(".library-content");
 
     const shuffleStored = localStorage.getItem("isShuffle") === "true";
     const rePeatStored = localStorage.getItem("isRepeat") === "true";
@@ -205,6 +207,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     sortBtn.addEventListener("click", slidebar.handleLibrary);
     slidebar.createPlayplist();
+
+    slidebar.handleTextMenuSlidebar();
 });
 
 // Other functionality

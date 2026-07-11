@@ -104,6 +104,13 @@ export function renderPlaylistDetail(playlist) {
 
 export function hidePlaylistDetail() {
     const playlistModal = document.querySelector(".playlist-detail-container");
+    const hitsSection = document.querySelector(".hits-section");
+    const albumsSection = document.querySelector(".albums-section");
+    const artistsSection = document.querySelector(".artists-section");
+
+    if (hitsSection) hitsSection.style.display = "block";
+    if (albumsSection) albumsSection.style.display = "block";
+    if (artistsSection) artistsSection.style.display = "block";
     if (playlistModal) playlistModal.style.display = "none";
 }
 
@@ -171,7 +178,7 @@ export function renderLibrary(items) {
             itemSubtitle.innerHTML =
                 '<i class="fas fa-thumbtack" style="color: var(--accent-primary); margin-right: 4px;"></i> Playlist • 3 songs';
         } else if (item.type === "playlists") {
-            itemSubtitle.textContent = `Playlist • ${item.user_username || "Han"}`;
+            itemSubtitle.textContent = `Playlist • ${item.total_tracks || "0"} songs`;
         } else if (item.type === "artist") {
             itemSubtitle.textContent = "Artist";
         }
@@ -237,7 +244,7 @@ export function addPlaylistToSidebar(playlist) {
 
     const itemSubtitle = document.createElement("div");
     itemSubtitle.classList.add("item-subtitle");
-    itemSubtitle.textContent = `Playlist • ${playlist.user_username || "Han"}`;
+    itemSubtitle.textContent = `Playlist • ${playlist.total_tracks || "0"} songs`;
     itemInfo.appendChild(itemSubtitle);
 
     libraryItem.appendChild(itemInfo);

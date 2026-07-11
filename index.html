@@ -157,6 +157,24 @@
                         </div>
                     </div>
                 </nav>
+
+                <!-- Custom Context Menu -->
+                <div
+                    class="custom-context-menu"
+                    id="context-menu"
+                    style="display: none"
+                >
+                    <ul class="menu-list">
+                        <li class="menu-item" id="menu-one">
+                            <i class="fas fa-times icon-unfollow"></i>
+                            <span>Unfollow</span>
+                        </li>
+                        <li class="menu-item" id="menu-two">
+                            <i class="fas fa-ban icon-dont-play"></i>
+                            <span>Don't play this artist</span>
+                        </li>
+                    </ul>
+                </div>
             </aside>
 
             <!-- Main Content -->
@@ -229,13 +247,13 @@
                     </section>
 
                     <!-- Context Menu -->
-                    <div
+                    <!-- <div
                         id="context-menu"
                         class="context-menu"
                         style="display: none"
                     >
                         <ul class="context-menu-list"></ul>
-                    </div>
+                    </div> -->
 
                     <!-- Detail Container (Hidden by default) -->
                     <div class="detail-container" style="display: none">
@@ -284,7 +302,11 @@
                                 >
                                     Danh sách phát của tôi
                                 </h1>
-                                <p class="playlist-description" id="playlist-hero-desc" style="display: none;"></p>
+                                <p
+                                    class="playlist-description"
+                                    id="playlist-hero-desc"
+                                    style="display: none"
+                                ></p>
                                 <div class="playlist-owner">
                                     <img
                                         src="./src/public/imgs/user.png"

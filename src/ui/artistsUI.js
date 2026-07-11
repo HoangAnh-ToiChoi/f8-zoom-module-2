@@ -120,13 +120,11 @@ export function renderTrackbyAr(filteredTracks) {
             trackItem.setAttribute("data-id", track.id);
             trackList.appendChild(trackItem);
 
-            // 1. Số thứ tự bài hát
             const trackNumber = document.createElement("div");
             trackNumber.classList.add("track-number");
             trackNumber.textContent = index + 1;
             trackItem.appendChild(trackNumber);
 
-            // 2. Hình ảnh bài hát
             const trackImage = document.createElement("div");
             trackImage.classList.add("track-image");
             trackItem.appendChild(trackImage);
@@ -139,7 +137,6 @@ export function renderTrackbyAr(filteredTracks) {
             };
             trackImage.appendChild(img);
 
-            // 3. Thông tin bài hát (Tên)
             const trackInfo = document.createElement("div");
             trackInfo.classList.add("track-info");
             trackItem.appendChild(trackInfo);
@@ -149,7 +146,6 @@ export function renderTrackbyAr(filteredTracks) {
             trackName.textContent = track.title || "Unknown Track";
             trackInfo.appendChild(trackName);
 
-            // 4. Lượt nghe (play_count)
             const trackPlays = document.createElement("div");
             trackPlays.classList.add("track-plays");
             const plays =
@@ -159,13 +155,11 @@ export function renderTrackbyAr(filteredTracks) {
             trackPlays.textContent = plays;
             trackItem.appendChild(trackPlays);
 
-            // 5. Thời lượng (duration)
             const trackDuration = document.createElement("div");
             trackDuration.classList.add("track-duration");
             trackDuration.textContent = formatDuration(track.duration);
             trackItem.appendChild(trackDuration);
 
-            // 6. Nút ba chấm option
             const btnMenu = document.createElement("button");
             btnMenu.classList.add("track-menu-btn");
             btnMenu.innerHTML = '<i class="fas fa-ellipsis-h"></i>';

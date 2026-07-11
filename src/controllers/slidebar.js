@@ -1,5 +1,10 @@
 import * as slidebarUI from "../ui/slidebarUI.js";
-import { createPlaylist, getMyPlaylist } from "../api/playlistsApi.js";
+import {
+    createPlaylist,
+    getMyPlaylist,
+    deletePlaylist,
+} from "../api/playlistsApi.js";
+import { showToast } from "../utils/toast.js";
 
 let playlists = {
     name: "My New Playlist",
@@ -102,9 +107,7 @@ export async function initLibrary() {
         const response = await getMyPlaylist();
         const myPlaylists = response.playlists;
 
-        const libraryItems = [
-            { id: "liked", name: "Liked Songs", type: "liked" },
-        ];
+        const libraryItems = [];
         if (Array.isArray(myPlaylists)) {
             myPlaylists.forEach((pl) => {
                 libraryItems.push({
@@ -121,4 +124,67 @@ export async function initLibrary() {
     } catch (e) {
         console.error("Lỗi khi load thư viện:", e);
     }
+}
+
+export function handleTextMenuSlidebar() {
+    const slidebar = document.querySelector(".sidebar");
+    const menu = document.querySelector(".custom-context-menu");
+    const deleteBtn = document.querySelector("#menu-one");
+    const removePlaylist = document.querySelector("#menu-two");
+
+    let currentId = null;
+    slidebar.addEventListener("contextmenu", (e) => {
+        if (e.button === 2) {
+            e.preventDefault();
+            const item = e.target.closest(".library-item");
+            const menuOne = document.querySelector("#menu-one span");
+            const menuTwo = document.querySelector("#menu-two span");
+            currentId = item.getAttribute("data-id");
+
+            if (item) {
+                const type = item.getAttribute("data-type");
+                if (type === "playlists") {
+                    menuOne.textContent = "Delete";
+                    menuTwo.textContent = "Remove from profile";
+                }
+
+                menu.style.display = "flex";
+                menu.style.top = `${e.clientY}px`;
+                menu.style.left = `${e.clientX}px`;
+            }
+        }
+    });
+
+    document.addEventListener("click", (e) => {
+        if (e.button === 0) {
+            menu.style.display = "none";
+        }
+    });
+
+    deleteBtn.addEventListener("click", async (e) => {
+        try {
+            const response = await deletePlaylist(currentId);
+            if (response.message === "Playlist deleted successfully") {
+                showToast("Xóa danh sách phát thành công!", "success");
+
+                const item = document.querySelector(
+                    `.library-item[data-id="${currentId}"]`,
+                );
+                if (item) item.remove();
+
+                const detailContainer = document.querySelector(
+                    ".playlist-detail-container",
+                );
+
+                if (
+                    detailContainer &&
+                    detailContainer.getAttribute("data-id") === currentId
+                ) {
+                    slidebarUI.hidePlaylistDetail();
+                }
+            }
+        } catch (e) {
+            throw e;
+        }
+    });
 }
