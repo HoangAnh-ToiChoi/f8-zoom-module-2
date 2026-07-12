@@ -54,6 +54,7 @@ export function renderPlaylistDetail(playlist) {
 
     detailContainer.setAttribute("data-id", playlist.id || "");
     detailContainer.setAttribute("data-type", "playlists");
+    detailContainer.setAttribute("data-user-id", playlist.user_id || "");
 
     const coverIcon = detailContainer.querySelector(
         ".playlist-cover i.fa-music",

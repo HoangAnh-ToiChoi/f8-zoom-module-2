@@ -41,6 +41,7 @@ export function renderPlaylistDetail(playlist) {
 
     detailContainer.setAttribute("data-id", playlist.id || "");
     detailContainer.setAttribute("data-type", "playlists");
+    detailContainer.setAttribute("data-user-id", playlist.user_id || "");
 
     const coverIcon = detailContainer.querySelector(
         ".playlist-cover i.fa-music",
@@ -132,6 +133,7 @@ export function hidePlaylistEditModal() {
 
 export function renderLibrary(items) {
     const libraryContent = document.querySelector(".library-content");
+
     if (!libraryContent || !items) return;
 
     libraryContent.innerHTML = "";
@@ -141,6 +143,10 @@ export function renderLibrary(items) {
         libraryItem.classList.add("library-item");
         libraryItem.setAttribute("data-id", item.id || "");
         libraryItem.setAttribute("data-type", item.type);
+        libraryItem.setAttribute(
+            "data-user-username",
+            item.user_username || "",
+        );
 
         if (item.type === "liked") {
             const iconDiv = document.createElement("div");

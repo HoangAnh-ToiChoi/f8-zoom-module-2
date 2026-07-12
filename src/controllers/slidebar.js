@@ -16,15 +16,14 @@ let playlists = {
 export function handleLibrary(e) {
     const sortBtn = e.target.closest(".sort-btn");
     if (sortBtn) {
-        console.log(e.clientX);
         slidebarUI.showLibraryFilter(e);
     }
 }
 
 export function createPlayplist() {
     const createBtn = document.querySelector(".create-btn");
-    const title = document.querySelector("#playlist-hero-title");
-    const modalCloseBtn = document.querySelector("#playlist-edit-close");
+    const title = document.getElementById("playlist-hero-title");
+    const modalCloseBtn = document.getElementById("playlist-edit-close");
     const btnSave = document.getElementById("playlist-save-btn");
 
     createBtn.addEventListener("click", () => {
@@ -32,11 +31,20 @@ export function createPlayplist() {
     });
 
     title.addEventListener("click", () => {
+        const detailContainer = document.querySelector(
+            ".playlist-detail-container",
+        );
+        const data = JSON.parse(localStorage.getItem("user") || "{}");
+        const userId = data.id;
+        const playlistOwnerId = detailContainer.getAttribute("data-user-id");
+        if (playlistOwnerId !== userId) return;
         slidebarUI.showPlaylistEditModal();
     });
+
     modalCloseBtn.addEventListener("click", () => {
         slidebarUI.hidePlaylistEditModal();
     });
+
     changeImage();
     changeValue();
 
@@ -49,7 +57,7 @@ export function createPlayplist() {
             slidebarUI.renderPlaylistDetail(newPlaylist);
             slidebarUI.addPlaylistToSidebar(newPlaylist);
         } catch (e) {
-            console.error("Lỗi khi tạo playlist:", e);
+            console.error(e);
             throw e;
         }
     });
@@ -106,7 +114,6 @@ export async function initLibrary() {
     try {
         const response = await getMyPlaylist();
         const myPlaylists = response.playlists;
-
         const libraryItems = [];
         if (Array.isArray(myPlaylists)) {
             myPlaylists.forEach((pl) => {
@@ -115,14 +122,16 @@ export async function initLibrary() {
                     name: pl.name,
                     type: "playlists",
                     image_url: pl.image_url,
+                    total_tracks: pl.total_tracks || 0,
                     user_username: pl.user_username || "Han",
+                    user_id: pl.user_id,
                 });
             });
         }
 
         slidebarUI.renderLibrary(libraryItems);
     } catch (e) {
-        console.error("Lỗi khi load thư viện:", e);
+        console.error(e);
     }
 }
 
