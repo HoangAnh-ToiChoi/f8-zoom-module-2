@@ -209,6 +209,8 @@ document.addEventListener("DOMContentLoaded", function () {
     slidebar.createPlayplist();
 
     slidebar.handleTextMenuSlidebar();
+
+    playlists.handleTextMenu();
 });
 
 // Other functionality

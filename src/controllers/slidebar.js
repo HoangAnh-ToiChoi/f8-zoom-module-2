@@ -123,12 +123,11 @@ export async function initLibrary() {
                     type: "playlists",
                     image_url: pl.image_url,
                     total_tracks: pl.total_tracks || 0,
-                    user_username: pl.user_username || "Han",
+                    user_username: pl.user_username || "Hoàng Anh",
                     user_id: pl.user_id,
                 });
             });
         }
-
         slidebarUI.renderLibrary(libraryItems);
     } catch (e) {
         console.error(e);
