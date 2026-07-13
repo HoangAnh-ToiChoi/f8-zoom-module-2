@@ -33,7 +33,8 @@ export async function showLibrarySlidebar(e) {
     listLibrary.forEach((item) => {
         const dataType = item.getAttribute("data-type");
         const isMatch =
-            (selectType === "playlists" && (dataType === "playlists" || dataType === "album")) ||
+            (selectType === "playlists" &&
+                (dataType === "playlists" || dataType === "album")) ||
             (selectType === "artist" && dataType === "artist");
         item.style.display = isMatch ? "flex" : "none";
     });
@@ -210,7 +211,34 @@ export async function initLibrary() {
 
         slidebarUI.renderLibrary(libraryItems);
     } catch (e) {
-        console.error(e);
+        const libraryContent = document.querySelector(".library-content");
+        if (!libraryContent) return;
+        if (
+            (e && e.code === "AUTH_HEADER_MISSING") ||
+            e.status === 401 ||
+            (e.message && e.message.includes("Authorization"))
+        ) {
+            libraryContent.innerHTML = `
+                <div class="library-promo-box" style="background-color: #242424; padding: 16px 20px; border-radius: 8px; margin: 8px; color: #fff;">
+                    <span style="font-weight: 700; font-size: 14px; display: block; margin-bottom: 8px;">Tạo danh sách phát đầu tiên của bạn</span>
+                    <span style="font-size: 12px; color: #b3b3b3; display: block; margin-bottom: 16px;">Rất dễ, chúng tôi sẽ giúp bạn</span>
+                    <button class="promo-login-btn" style="background-color: #fff; color: #000; border: none; padding: 6px 16px; border-radius: 500px; font-size: 12px; font-weight: 700; cursor: pointer;">Đăng nhập</button>
+                </div>
+            `;
+            libraryContent
+                .querySelector(".promo-login-btn")
+                ?.addEventListener("click", () => {
+                    const userBtn = document.querySelector(".user-btn");
+                    if (userBtn) userBtn.click();
+                });
+        } else {
+            libraryContent.innerHTML = ``;
+            libraryContent
+                .querySelector(".promo-retry-btn")
+                ?.addEventListener("click", () => {
+                    initLibrary();
+                });
+        }
     }
 }
 

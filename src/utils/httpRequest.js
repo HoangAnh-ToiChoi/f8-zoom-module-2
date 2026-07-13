@@ -26,6 +26,15 @@ class HttpRequest {
             const res = await fetch(`${this.baseUrl}${path}`, _option);
 
             if (!res.ok) {
+                if (res.status === 401) {
+                    localStorage.removeItem("accessToken");
+                    localStorage.removeItem("user");
+                    throw {
+                        code: "UNAUTHORIZED",
+                        message:
+                            "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!",
+                    };
+                }
                 const errorText = await res.json().catch(() => {});
                 throw errorText.error;
             }

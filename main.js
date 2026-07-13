@@ -1,4 +1,3 @@
-import httpRequest from "./src/utils/httpRequest.js";
 import * as login from "./src/auth/auth.js";
 import * as register from "./src/auth/register.js";
 import * as storage from "./src/utils/stogare.js";
@@ -8,6 +7,7 @@ import * as artists from "./src/controllers/artists.js";
 import { hideDetailView } from "./src/utils/uiHelpers.js";
 import * as player from "./src/controllers/player.js";
 import * as slidebar from "./src/controllers/slidebar.js";
+import { renderMusicByID } from "./src/ui/playerUI.js";
 
 // Auth Modal Functionality
 document.addEventListener("DOMContentLoaded", async function () {
@@ -26,10 +26,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     const hitsGrid = document.querySelector(".hits-grid");
     const currentTrack = localStorage.getItem("currentTrack");
     const timeCurrent = localStorage.getItem("timeCurrrent");
+    const volume = localStorage.getItem("volume");
 
-    // if (currentTrack && timeCurrent) {
-    //     await renderMusicByID(currentTrack);
-    // }
+    if (currentTrack && timeCurrent) {
+        await renderMusicByID(currentTrack, timeCurrent);
+        player.audio.volume = Number(volume);
+        const volumeFill = document.querySelector(".volume-fill");
+        if (volumeFill) {
+            volumeFill.style.width = `${volume * 100}%`;
+        }
+    }
     // Function to show signup form
     function showSignupForm() {
         signupForm.style.display = "block";
@@ -112,7 +118,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     artistsGrid.addEventListener("click", artists.playAr);
     trackList.addEventListener("click", player.getMusic);
     hitsGrid.addEventListener("click", playlists.ChosePlaylist);
-    player.handleVolume();
     slidebar.createPlayplist();
 
     slidebar.handleTextMenuSlidebar();
@@ -222,6 +227,8 @@ document.addEventListener("DOMContentLoaded", function () {
     sortBtn.addEventListener("click", slidebar.handleLibrary);
 
     navTab.addEventListener("click", slidebar.showLibrarySlidebar);
+
+    player.handleVolume();
 
     document.onclick = () => {
         hitMenu.style.display = "none";

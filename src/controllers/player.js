@@ -57,8 +57,8 @@ export async function getMusic(e) {
         audio.src = filltracks.audio_url;
         audio.play();
         setIconUI(true);
-        localStorage.setItem("currentTrack", JSON.stringify(currentTrack.id));
-        localStorage.setItem("timeCurrrent", JSON.stringify(audio.currentTime));
+        localStorage.setItem("currentTrack", currentTrack.id);
+        localStorage.setItem("timeCurrrent", audio.currentTime);
 
         document.querySelectorAll(".track-item").forEach((track) => {
             track.classList.remove("playing");
@@ -70,19 +70,13 @@ export async function getMusic(e) {
                 ".progress-container .time:last-child",
             );
             timeUpdate.textContent = formatDuration(audio.duration);
-            localStorage.setItem(
-                "currentTrack",
-                JSON.stringify(currentTrack.id),
-            );
-            localStorage.setItem("timeCurrrent", JSON.stringify(0));
+            localStorage.setItem("currentTrack", currentTrack.id);
+            localStorage.setItem("timeCurrrent", 0);
         };
 
         audio.ontimeupdate = function () {
             processBarUI(audio.currentTime, audio.duration);
-            localStorage.setItem(
-                "timeCurrrent",
-                JSON.stringify(audio.currentTime),
-            );
+            localStorage.setItem("timeCurrrent", audio.currentTime);
         };
         audio.onended = () => {
             const repeatActive = document.querySelector(".repeat.active");
@@ -146,7 +140,7 @@ export function handleForwardSong(step) {
     }
 }
 
-function handleProcess() {
+export function handleProcess() {
     const processBar = document.querySelector(".progress-bar");
     const processFill = document.querySelector(".progress-fill");
     if (!processBar || !processFill) return;
@@ -156,7 +150,7 @@ function handleProcess() {
         processFill.style.transition = "none";
 
         const onMouseMove = (e) => {
-            const rect = processFill.getBoundingClientRect();
+            const rect = processBar.getBoundingClientRect();
             let radio = (e.clientX - rect.left) / rect.width;
             if (radio < 0) radio = 0;
             if (radio > 1) radio = 1;
@@ -201,6 +195,7 @@ export function handleVolume() {
             if (radio < 0) radio = 0;
             if (radio > 1) radio = 1;
             audio.volume = radio;
+            localStorage.setItem("volume", radio);
             document.removeEventListener("mousemove", onMouseMove);
             document.removeEventListener("mouseup", onMouseUp);
         };

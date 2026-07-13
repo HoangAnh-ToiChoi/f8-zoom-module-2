@@ -1,3 +1,6 @@
+import { getTrackByID } from "../api/trackApi.js";
+import { audio, handleProcess } from "../controllers/player.js";
+
 export function renderMusicPlayer(track) {
     const playerLeft = document.querySelector(".player-left");
     if (!playerLeft) return;
@@ -34,9 +37,56 @@ export function renderMusicPlayer(track) {
     playerLeft.appendChild(btnAdd);
 }
 
-export async function renderMusicByID(id) {
-    const track = await getTrackByID(id);
-    renderMusicPlayer(track);
-    audio.src = track.audio_url;
-    audio.currentTime = timeCurrent;
+export async function renderMusicByID(id, timeCurrent = 0) {
+    try {
+        const track = await getTrackByID(id);
+        renderMusicPlayer(track);
+
+        if (timeCurrent) {
+            const onLoaded = () => {
+                audio.currentTime = parseFloat(timeCurrent);
+
+                const processFill = document.querySelector(".progress-fill");
+                const timeCurrentEl = document.querySelector(
+                    ".progress-container .time:first-child",
+                );
+                if (audio.duration) {
+                    const process = (audio.currentTime / audio.duration) * 100;
+                    if (processFill) processFill.style.width = `${process}%`;
+                }
+                const formatDuration = (secs) => {
+                    const minutes = Math.floor(secs / 60);
+                    const seconds = Math.floor(secs % 60);
+                    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+                };
+                if (timeCurrentEl) {
+                    timeCurrentEl.textContent = formatDuration(
+                        audio.currentTime,
+                    );
+                }
+
+                const timeTotalEl = document.querySelector(
+                    ".progress-container .time:last-child",
+                );
+                if (timeTotalEl && audio.duration) {
+                    timeTotalEl.textContent = formatDuration(audio.duration);
+                }
+
+                audio.removeEventListener("loadedmetadata", onLoaded);
+            };
+            audio.addEventListener("loadedmetadata", onLoaded);
+        }
+
+        audio.src = track.audio_url;
+
+        const playBtn = document.querySelector(".play-btn");
+        const playBtnLarge = document.querySelector(".play-btn-large");
+        if (playBtn) playBtn.innerHTML = `<i class="fas fa-play"></i>`;
+        if (playBtnLarge)
+            playBtnLarge.innerHTML = `<i class="fas fa-play"></i>`;
+
+        handleProcess();
+    } catch (error) {
+        console.log(error);
+    }
 }
