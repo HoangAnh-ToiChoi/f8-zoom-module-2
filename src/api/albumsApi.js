@@ -7,3 +7,11 @@ export async function getAllAlbums() {
 export async function getAlbumById(id) {
     return await httpRequest.get(`albums/${id}`);
 }
+
+export async function likeAlbum(id) {
+    return await httpRequest.post(`albums/${id}/like`);
+}
+
+export async function unlikeAlbum(id) {
+    return await httpRequest.delete(`albums/${id}/like`);
+}

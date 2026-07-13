@@ -15,6 +15,7 @@ export function renderAllAlbums(albums) {
             const hitCard = document.createElement("div");
             hitCard.classList.add("hit-card");
             hitCard.setAttribute("data-id", album.id);
+            hitCard.setAttribute("data-type", "albums");
             albumsGrid.appendChild(hitCard);
 
             const hitCardCover = document.createElement("div");

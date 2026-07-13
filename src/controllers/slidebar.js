@@ -6,6 +6,7 @@ import {
 } from "../api/playlistsApi.js";
 import { showToast } from "../utils/toast.js";
 import * as artistsApi from "../api/ArtistsApi.js";
+import * as albumsApi from "../api/albumsApi.js";
 
 let playlists = {
     name: "My New Playlist",
@@ -31,7 +32,9 @@ export async function showLibrarySlidebar(e) {
     const listLibrary = libraryContent.querySelectorAll(".library-item");
     listLibrary.forEach((item) => {
         const dataType = item.getAttribute("data-type");
-        const isMatch = dataType === selectType;
+        const isMatch =
+            (selectType === "playlists" && (dataType === "playlists" || dataType === "album")) ||
+            (selectType === "artist" && dataType === "artist");
         item.style.display = isMatch ? "flex" : "none";
     });
 }
@@ -141,8 +144,7 @@ export async function initLibrary() {
         let followedArtists = [];
         try {
             const artistResponse = await artistsApi.getAllArtists();
-            const allArtists =
-                artistResponse.artists || artistResponse.data || artistResponse;
+            const allArtists = artistResponse.artists;
             if (Array.isArray(allArtists)) {
                 followedArtists = allArtists.filter(
                     (ar) =>
@@ -152,7 +154,23 @@ export async function initLibrary() {
                 );
             }
         } catch (err) {
-            console.error("Lỗi khi tải danh sách nghệ sĩ:", err);
+            console.error(err);
+        }
+
+        let followedAlbums = [];
+        try {
+            const albumResponse = await albumsApi.getAllAlbums();
+            const allAlbums = albumResponse.albums;
+            if (Array.isArray(allAlbums)) {
+                followedAlbums = allAlbums.filter(
+                    (al) =>
+                        al.is_liked === true ||
+                        al.is_liked === 1 ||
+                        al.is_liked === "true",
+                );
+            }
+        } catch (err) {
+            console.error(err);
         }
 
         const libraryItems = [];
@@ -177,6 +195,16 @@ export async function initLibrary() {
                 name: art.name,
                 type: "artist",
                 image_url: art.image_url,
+            });
+        });
+
+        followedAlbums.forEach((ab) => {
+            libraryItems.push({
+                id: ab.id,
+                name: ab.title,
+                type: "album",
+                image_url: ab.cover_image_url,
+                artist_name: ab.artist_name || "Unknown",
             });
         });
 

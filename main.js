@@ -120,6 +120,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     playlists.handleTextMenu();
 
     artists.handleTextMenu();
+
+    albums.handleTextMenu();
 });
 
 // User Menu Dropdown Functionality
@@ -142,6 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const artistMenu = document.querySelector(".context-menu");
     const menu = document.querySelector(".custom-context-menu");
     const navTab = document.querySelector(".nav-tabs");
+    const albumsMenu = document.querySelector("#albums-context-menu");
 
     const shuffleStored = localStorage.getItem("isShuffle") === "true";
     const rePeatStored = localStorage.getItem("isRepeat") === "true";
@@ -223,6 +226,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.onclick = () => {
         hitMenu.style.display = "none";
         artistMenu.style.display = "none";
+        albumsMenu.style.display = "none";
         menu.style.display = "none";
     };
 });

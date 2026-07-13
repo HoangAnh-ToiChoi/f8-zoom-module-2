@@ -65,12 +65,17 @@ async function handleFollowArtist() {
     const artistMenu = document.querySelector(".context-menu");
     const id = artistMenu?.getAttribute("data-active-id");
     if (id) {
-        const response = await artistsApi.followArtist(id);
-        console.log(response);
-        if (response.is_following === true) {
-            showToast("Đã theo dõi nghệ sĩ thành công!", "success");
-            const artist = await artistsApi.getArtistsById(id);
-            addArtistToSidebar(artist);
+        try {
+            const response = await artistsApi.followArtist(id);
+            console.log(response);
+            if (response.is_following === true) {
+                showToast("Đã theo dõi nghệ sĩ thành công!", "success");
+                const artist = await artistsApi.getArtistsById(id);
+                addArtistToSidebar(artist);
+            }
+        } catch (e) {
+            console.error(e);
+            showToast("Bạn đã theo dõi nghệ sĩ này", "info");
         }
     }
 }

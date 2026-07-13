@@ -149,7 +149,9 @@ export function renderLibrary(items) {
         libraryItem.setAttribute("data-id", item.id || "");
         libraryItem.setAttribute("data-type", item.type);
 
-        const isMatch = item.type === activeType;
+        const isMatch =
+            (activeType === "playlists" && (item.type === "playlists" || item.type === "album")) ||
+            (activeType === "artist" && item.type === "artist");
         if (!isMatch) {
             libraryItem.style.display = "none";
         }
@@ -198,6 +200,8 @@ export function renderLibrary(items) {
             itemSubtitle.textContent = `Playlist • ${item.total_tracks || "0"} songs`;
         } else if (item.type === "artist") {
             itemSubtitle.textContent = "Artist";
+        } else if (item.type === "album") {
+            itemSubtitle.textContent = `Album • ${item.artist_name || "Unknown"}`;
         }
         itemInfo.appendChild(itemSubtitle);
         libraryItem.appendChild(itemInfo);
@@ -211,7 +215,11 @@ export function renderLibrary(items) {
             if (item.type === "playlists") {
                 renderPlaylistDetail(item);
             } else if (item.type === "artist") {
-                console.log("Click Artist:", item.id);
+                const event = new CustomEvent("artistClick", { detail: { id: item.id } });
+                document.dispatchEvent(event);
+            } else if (item.type === "album") {
+                const event = new CustomEvent("albumClick", { detail: { id: item.id } });
+                document.dispatchEvent(event);
             }
         });
 
@@ -219,19 +227,25 @@ export function renderLibrary(items) {
     });
 }
 
-export function addPlaylistToSidebar(playlist) {
+export function addItemToSidebar(item) {
     const libraryContent = document.querySelector(".library-content");
-    if (!libraryContent || !playlist) return;
+    if (!libraryContent || !item) return;
+
+    const id = item.id;
+    const type = item.type;
+    const titleText = item.name || item.title || "";
+    const imgUrl =
+        item.image_url || item.cover_image_url || "./placeholder.svg";
 
     const existItem = libraryContent.querySelector(
-        `.library-item[data-id="${playlist.id}"]`,
+        `.library-item[data-id="${id}"][data-type="${type}"]`,
     );
     if (existItem) {
         const title = existItem.querySelector(".item-title");
         const img = existItem.querySelector(".item-image");
-        if (title) title.textContent = playlist.name;
-        if (img && playlist.image_url) {
-            img.src = playlist.image_url;
+        if (title) title.textContent = titleText;
+        if (img && imgUrl) {
+            img.src = imgUrl;
             img.style.display = "block";
         }
         return;
@@ -239,21 +253,28 @@ export function addPlaylistToSidebar(playlist) {
 
     const libraryItem = document.createElement("div");
     libraryItem.classList.add("library-item");
-    libraryItem.setAttribute("data-id", playlist.id || "");
-    libraryItem.setAttribute("data-type", "playlists");
+    libraryItem.setAttribute("data-id", id || "");
+    libraryItem.setAttribute("data-type", type || "");
 
     const activeTab = document.querySelector(".nav-tabs .nav-tab.active");
     if (activeTab) {
         const activeType = activeTab.getAttribute("data-type");
-        if (activeType !== "playlists") {
+        const isMatch =
+            (activeType === "playlists" &&
+                (type === "playlists" || type === "album")) ||
+            (activeType === "artist" && type === "artist");
+        if (!isMatch) {
             libraryItem.style.display = "none";
         }
     }
 
     const img = document.createElement("img");
-    img.src = playlist.image_url || "./placeholder.svg";
-    img.alt = playlist.name;
+    img.src = imgUrl;
+    img.alt = titleText;
     img.className = "item-image";
+    if (type === "artist") {
+        img.style.borderRadius = "50%";
+    }
     img.onerror = () => {
         img.src = "./placeholder.svg";
     };
@@ -264,14 +285,20 @@ export function addPlaylistToSidebar(playlist) {
 
     const itemTitle = document.createElement("div");
     itemTitle.classList.add("item-title");
-    itemTitle.textContent = playlist.name;
+    itemTitle.textContent = titleText;
     itemInfo.appendChild(itemTitle);
 
     const itemSubtitle = document.createElement("div");
     itemSubtitle.classList.add("item-subtitle");
-    itemSubtitle.textContent = `Playlist • ${playlist.total_tracks || "0"} songs`;
-    itemInfo.appendChild(itemSubtitle);
 
+    if (type === "playlists") {
+        itemSubtitle.textContent = `Playlist • ${item.total_tracks || 0} songs`;
+    } else if (type === "artist") {
+        itemSubtitle.textContent = "Artist";
+    } else if (type === "album") {
+        itemSubtitle.textContent = `Album • ${item.artist_name || "Unknown"}`;
+    }
+    itemInfo.appendChild(itemSubtitle);
     libraryItem.appendChild(itemInfo);
 
     libraryItem.addEventListener("click", () => {
@@ -279,74 +306,31 @@ export function addPlaylistToSidebar(playlist) {
             el.classList.remove("active");
         });
         libraryItem.classList.add("active");
-        renderPlaylistDetail(playlist);
+
+        if (type === "playlists") {
+            renderPlaylistDetail(item);
+        } else if (type === "artist") {
+            const event = new CustomEvent("artistClick", {
+                detail: { id: id },
+            });
+            document.dispatchEvent(event);
+        } else if (type === "album") {
+            const event = new CustomEvent("albumClick", { detail: { id: id } });
+            document.dispatchEvent(event);
+        }
     });
 
     libraryContent.appendChild(libraryItem);
 }
 
+export function addPlaylistToSidebar(playlist) {
+    addItemToSidebar({ ...playlist, type: "playlists" });
+}
+
 export function addArtistToSidebar(artist) {
-    const libraryContent = document.querySelector(".library-content");
-    if (!libraryContent || !artist) return;
+    addItemToSidebar({ ...artist, type: "artist" });
+}
 
-    const existItem = libraryContent.querySelector(
-        `.library-item[data-id="${artist.id}"][data-type="artist"]`,
-    );
-    if (existItem) {
-        const title = existItem.querySelector(".item-title");
-        const img = existItem.querySelector(".item-image");
-        if (title) title.textContent = artist.name;
-        if (img && artist.image_url) {
-            img.src = artist.image_url;
-            img.style.display = "block";
-        }
-        return;
-    }
-
-    const libraryItem = document.createElement("div");
-    libraryItem.classList.add("library-item");
-    libraryItem.setAttribute("data-id", artist.id || "");
-    libraryItem.setAttribute("data-type", "artist");
-
-    const activeTab = document.querySelector(".nav-tabs .nav-tab.active");
-    if (activeTab) {
-        const activeType = activeTab.getAttribute("data-type");
-        if (activeType !== "artist") {
-            libraryItem.style.display = "none";
-        }
-    }
-
-    const img = document.createElement("img");
-    img.src = artist.image_url || "./placeholder.svg";
-    img.alt = artist.name;
-    img.className = "item-image";
-    img.style.borderRadius = "50%";
-    img.onerror = () => {
-        img.src = "./placeholder.svg";
-    };
-    libraryItem.appendChild(img);
-
-    const itemInfo = document.createElement("div");
-    itemInfo.classList.add("item-info");
-
-    const itemTitle = document.createElement("div");
-    itemTitle.classList.add("item-title");
-    itemTitle.textContent = artist.name;
-    itemInfo.appendChild(itemTitle);
-
-    const itemSubtitle = document.createElement("div");
-    itemSubtitle.classList.add("item-subtitle");
-    itemSubtitle.textContent = "Artist";
-    itemInfo.appendChild(itemSubtitle);
-
-    libraryItem.appendChild(itemInfo);
-
-    libraryItem.addEventListener("click", () => {
-        document.querySelectorAll(".library-item").forEach((el) => {
-            el.classList.remove("active");
-        });
-        libraryItem.classList.add("active");
-    });
-
-    libraryContent.appendChild(libraryItem);
+export function addAlbumToSidebar(album) {
+    addItemToSidebar({ ...album, type: "album" });
 }
