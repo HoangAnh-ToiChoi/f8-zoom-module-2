@@ -7,3 +7,11 @@ export async function getAllArtists() {
 export async function getArtistsById(id) {
     return await httpRequest.get(`artists/${id}`);
 }
+
+export async function followArtist(id) {
+    return await httpRequest.post(`artists/${id}/follow`);
+}
+
+export async function unfollowArtist(id) {
+    return await httpRequest.delete(`artists/${id}/follow`);
+}

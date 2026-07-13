@@ -1,6 +1,6 @@
 import * as playlistApi from "../api/playlistsApi.js";
 import * as playlistsUI from "../ui/playlistsUI.js";
-import { renderLibrary, addPlaylistToSidebar } from "../ui/slidebarUI.js";
+import { addPlaylistToSidebar } from "../ui/slidebarUI.js";
 import { showDetailView } from "../utils/uiHelpers.js";
 import { showToast } from "../utils/toast.js";
 
@@ -45,10 +45,6 @@ export function handleTextMenu() {
             hitMenu.style.top = `${e.clientY}px`;
         }
     });
-
-    document.onclick = () => {
-        hitMenu.style.display = "none";
-    };
 
     addPlaylist.addEventListener("click", handleAddSongToPlaylist);
 }

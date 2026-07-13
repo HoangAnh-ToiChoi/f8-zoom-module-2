@@ -138,11 +138,22 @@ export function renderLibrary(items) {
 
     libraryContent.innerHTML = "";
 
+    const activeTab = document.querySelector(".nav-tabs .nav-tab.active");
+    const activeType = activeTab
+        ? activeTab.getAttribute("data-type")
+        : "playlists";
+
     items.forEach((item) => {
         const libraryItem = document.createElement("div");
         libraryItem.classList.add("library-item");
         libraryItem.setAttribute("data-id", item.id || "");
         libraryItem.setAttribute("data-type", item.type);
+
+        const isMatch = item.type === activeType;
+        if (!isMatch) {
+            libraryItem.style.display = "none";
+        }
+
         libraryItem.setAttribute(
             "data-user-username",
             item.user_username || "",
@@ -231,6 +242,14 @@ export function addPlaylistToSidebar(playlist) {
     libraryItem.setAttribute("data-id", playlist.id || "");
     libraryItem.setAttribute("data-type", "playlists");
 
+    const activeTab = document.querySelector(".nav-tabs .nav-tab.active");
+    if (activeTab) {
+        const activeType = activeTab.getAttribute("data-type");
+        if (activeType !== "playlists") {
+            libraryItem.style.display = "none";
+        }
+    }
+
     const img = document.createElement("img");
     img.src = playlist.image_url || "./placeholder.svg";
     img.alt = playlist.name;
@@ -261,6 +280,72 @@ export function addPlaylistToSidebar(playlist) {
         });
         libraryItem.classList.add("active");
         renderPlaylistDetail(playlist);
+    });
+
+    libraryContent.appendChild(libraryItem);
+}
+
+export function addArtistToSidebar(artist) {
+    const libraryContent = document.querySelector(".library-content");
+    if (!libraryContent || !artist) return;
+
+    const existItem = libraryContent.querySelector(
+        `.library-item[data-id="${artist.id}"][data-type="artist"]`,
+    );
+    if (existItem) {
+        const title = existItem.querySelector(".item-title");
+        const img = existItem.querySelector(".item-image");
+        if (title) title.textContent = artist.name;
+        if (img && artist.image_url) {
+            img.src = artist.image_url;
+            img.style.display = "block";
+        }
+        return;
+    }
+
+    const libraryItem = document.createElement("div");
+    libraryItem.classList.add("library-item");
+    libraryItem.setAttribute("data-id", artist.id || "");
+    libraryItem.setAttribute("data-type", "artist");
+
+    const activeTab = document.querySelector(".nav-tabs .nav-tab.active");
+    if (activeTab) {
+        const activeType = activeTab.getAttribute("data-type");
+        if (activeType !== "artist") {
+            libraryItem.style.display = "none";
+        }
+    }
+
+    const img = document.createElement("img");
+    img.src = artist.image_url || "./placeholder.svg";
+    img.alt = artist.name;
+    img.className = "item-image";
+    img.style.borderRadius = "50%";
+    img.onerror = () => {
+        img.src = "./placeholder.svg";
+    };
+    libraryItem.appendChild(img);
+
+    const itemInfo = document.createElement("div");
+    itemInfo.classList.add("item-info");
+
+    const itemTitle = document.createElement("div");
+    itemTitle.classList.add("item-title");
+    itemTitle.textContent = artist.name;
+    itemInfo.appendChild(itemTitle);
+
+    const itemSubtitle = document.createElement("div");
+    itemSubtitle.classList.add("item-subtitle");
+    itemSubtitle.textContent = "Artist";
+    itemInfo.appendChild(itemSubtitle);
+
+    libraryItem.appendChild(itemInfo);
+
+    libraryItem.addEventListener("click", () => {
+        document.querySelectorAll(".library-item").forEach((el) => {
+            el.classList.remove("active");
+        });
+        libraryItem.classList.add("active");
     });
 
     libraryContent.appendChild(libraryItem);

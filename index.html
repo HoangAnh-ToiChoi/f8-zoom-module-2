@@ -35,8 +35,8 @@
                     </div>
 
                     <div class="nav-tabs">
-                        <button class="nav-tab active">Playlists</button>
-                        <button class="nav-tab">Artists</button>
+                        <button class="nav-tab active" data-type="playlists">Playlists</button>
+                        <button class="nav-tab" data-type="artist">Artists</button>
                     </div>
 
                     <div class="search-library">
@@ -247,13 +247,22 @@
                     </section>
 
                     <!-- Context Menu -->
-                    <!-- <div
+                    <div
                         id="context-menu"
                         class="context-menu"
                         style="display: none"
                     >
-                        <ul class="context-menu-list"></ul>
-                    </div> -->
+                        <ul class="context-menu-list">
+                            <li class="context-menu-item" id="menu-one">
+                                <i class="fas fa-times icon-unfollow"></i>
+                                <span>Follow</span>
+                            </li>
+                            <li class="context-menu-item" id="menu-two">
+                                <i class="fas fa-ban icon-dont-play"></i>
+                                <span>Play this artist</span>
+                            </li>
+                        </ul>
+                    </div>
 
                     <!-- Detail Container (Hidden by default) -->
                     <div class="detail-container" style="display: none">
@@ -616,7 +625,7 @@
         </div>
 
         <!-- Hits Grid Context Menu -->
-        <div class="custom-context-menu" id="hits-context-menu" >
+        <div class="custom-context-menu" id="hits-context-menu">
             <ul class="menu-list">
                 <li class="menu-item" id="menu-add-library">
                     <i class="far fa-plus-circle"></i>

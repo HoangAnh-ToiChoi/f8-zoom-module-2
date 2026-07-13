@@ -113,6 +113,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     trackList.addEventListener("click", player.getMusic);
     hitsGrid.addEventListener("click", playlists.ChosePlaylist);
     player.handleVolume();
+    slidebar.createPlayplist();
+
+    slidebar.handleTextMenuSlidebar();
+
+    playlists.handleTextMenu();
+
+    artists.handleTextMenu();
 });
 
 // User Menu Dropdown Functionality
@@ -131,6 +138,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const muteBtn = document.querySelector(".mute-btn");
     const sortBtn = document.querySelector(".sort-btn");
     const slideContent = document.querySelector(".library-content");
+    const hitMenu = document.getElementById("hits-context-menu");
+    const artistMenu = document.querySelector(".context-menu");
+    const menu = document.querySelector(".custom-context-menu");
+    const navTab = document.querySelector(".nav-tabs");
 
     const shuffleStored = localStorage.getItem("isShuffle") === "true";
     const rePeatStored = localStorage.getItem("isRepeat") === "true";
@@ -206,11 +217,14 @@ document.addEventListener("DOMContentLoaded", function () {
     muteBtn.addEventListener("click", player.handleMute);
 
     sortBtn.addEventListener("click", slidebar.handleLibrary);
-    slidebar.createPlayplist();
 
-    slidebar.handleTextMenuSlidebar();
+    navTab.addEventListener("click", slidebar.showLibrarySlidebar);
 
-    playlists.handleTextMenu();
+    document.onclick = () => {
+        hitMenu.style.display = "none";
+        artistMenu.style.display = "none";
+        menu.style.display = "none";
+    };
 });
 
 // Other functionality

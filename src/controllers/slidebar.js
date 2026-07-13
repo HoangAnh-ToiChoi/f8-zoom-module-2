@@ -5,6 +5,7 @@ import {
     deletePlaylist,
 } from "../api/playlistsApi.js";
 import { showToast } from "../utils/toast.js";
+import * as artistsApi from "../api/ArtistsApi.js";
 
 let playlists = {
     name: "My New Playlist",
@@ -12,6 +13,28 @@ let playlists = {
     is_public: true,
     image_url: null,
 };
+
+export async function showLibrarySlidebar(e) {
+    const button = e.target.closest(".nav-tab");
+    const selectType = button?.getAttribute("data-type");
+
+    if (!button) return;
+    const navTabs = document.querySelector(".nav-tabs");
+    if (navTabs) {
+        navTabs.querySelectorAll(".nav-tab").forEach((item) => {
+            item.classList.remove("active");
+        });
+        button.classList.add("active");
+    }
+
+    const libraryContent = document.querySelector(".library-content");
+    const listLibrary = libraryContent.querySelectorAll(".library-item");
+    listLibrary.forEach((item) => {
+        const dataType = item.getAttribute("data-type");
+        const isMatch = dataType === selectType;
+        item.style.display = isMatch ? "flex" : "none";
+    });
+}
 
 export function handleLibrary(e) {
     const sortBtn = e.target.closest(".sort-btn");
@@ -114,7 +137,26 @@ export async function initLibrary() {
     try {
         const response = await getMyPlaylist();
         const myPlaylists = response.playlists;
+
+        let followedArtists = [];
+        try {
+            const artistResponse = await artistsApi.getAllArtists();
+            const allArtists =
+                artistResponse.artists || artistResponse.data || artistResponse;
+            if (Array.isArray(allArtists)) {
+                followedArtists = allArtists.filter(
+                    (ar) =>
+                        ar.is_following === true ||
+                        ar.is_following === 1 ||
+                        ar.is_following === "true",
+                );
+            }
+        } catch (err) {
+            console.error("Lỗi khi tải danh sách nghệ sĩ:", err);
+        }
+
         const libraryItems = [];
+
         if (Array.isArray(myPlaylists)) {
             myPlaylists.forEach((pl) => {
                 libraryItems.push({
@@ -128,6 +170,16 @@ export async function initLibrary() {
                 });
             });
         }
+
+        followedArtists.forEach((art) => {
+            libraryItems.push({
+                id: art.id,
+                name: art.name,
+                type: "artist",
+                image_url: art.image_url,
+            });
+        });
+
         slidebarUI.renderLibrary(libraryItems);
     } catch (e) {
         console.error(e);
@@ -147,7 +199,7 @@ export function handleTextMenuSlidebar() {
             const item = e.target.closest(".library-item");
             const menuOne = document.querySelector("#menu-one span");
             const menuTwo = document.querySelector("#menu-two span");
-            currentId = item.getAttribute("data-id");
+            currentId = item?.getAttribute("data-id");
 
             if (item) {
                 const type = item.getAttribute("data-type");
@@ -160,12 +212,6 @@ export function handleTextMenuSlidebar() {
                 menu.style.top = `${e.clientY}px`;
                 menu.style.left = `${e.clientX}px`;
             }
-        }
-    });
-
-    document.addEventListener("click", (e) => {
-        if (e.button === 0) {
-            menu.style.display = "none";
         }
     });
 
