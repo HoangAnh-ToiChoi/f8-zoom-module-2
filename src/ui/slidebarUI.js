@@ -148,9 +148,11 @@ export function renderLibrary(items) {
         libraryItem.classList.add("library-item");
         libraryItem.setAttribute("data-id", item.id || "");
         libraryItem.setAttribute("data-type", item.type);
+        libraryItem.setAttribute("data-user-id", item.user_id || "");
 
         const isMatch =
-            (activeType === "playlists" && (item.type === "playlists" || item.type === "album")) ||
+            (activeType === "playlists" &&
+                (item.type === "playlists" || item.type === "album")) ||
             (activeType === "artist" && item.type === "artist");
         if (!isMatch) {
             libraryItem.style.display = "none";
@@ -215,10 +217,14 @@ export function renderLibrary(items) {
             if (item.type === "playlists") {
                 renderPlaylistDetail(item);
             } else if (item.type === "artist") {
-                const event = new CustomEvent("artistClick", { detail: { id: item.id } });
+                const event = new CustomEvent("artistClick", {
+                    detail: { id: item.id },
+                });
                 document.dispatchEvent(event);
             } else if (item.type === "album") {
-                const event = new CustomEvent("albumClick", { detail: { id: item.id } });
+                const event = new CustomEvent("albumClick", {
+                    detail: { id: item.id },
+                });
                 document.dispatchEvent(event);
             }
         });
@@ -255,6 +261,7 @@ export function addItemToSidebar(item) {
     libraryItem.classList.add("library-item");
     libraryItem.setAttribute("data-id", id || "");
     libraryItem.setAttribute("data-type", type || "");
+    libraryItem.setAttribute("data-user-id", item.user_id || "");
 
     const activeTab = document.querySelector(".nav-tabs .nav-tab.active");
     if (activeTab) {

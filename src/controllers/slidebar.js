@@ -64,7 +64,10 @@ export function createPlayplist() {
         const data = JSON.parse(localStorage.getItem("user") || "{}");
         const userId = data.id;
         const playlistOwnerId = detailContainer.getAttribute("data-user-id");
-        if (playlistOwnerId !== userId) return;
+
+        if (playlistOwnerId && String(playlistOwnerId) !== String(userId))
+            return;
+
         slidebarUI.showPlaylistEditModal();
     });
 
@@ -205,7 +208,7 @@ export async function initLibrary() {
                 name: ab.title,
                 type: "album",
                 image_url: ab.cover_image_url,
-                artist_name: ab.artist_name || "Unknown",
+                artist_name: ab.artist_name || "",
             });
         });
 
@@ -250,6 +253,7 @@ export function handleTextMenuSlidebar() {
 
     let currentId = null;
     let type = null;
+    let copiedPlaylists = [];
 
     slidebar.addEventListener("contextmenu", (e) => {
         if (e.button === 2) {
@@ -260,10 +264,25 @@ export function handleTextMenuSlidebar() {
             currentId = item?.getAttribute("data-id");
             type = item?.getAttribute("data-type");
 
+            copiedPlaylists = JSON.parse(
+                localStorage.getItem("copiedPlaylists") || "[]",
+            );
+            const isCopied = copiedPlaylists
+                .map(String)
+                .includes(String(currentId));
+
+            deleteBtn.style.display = "flex";
+            removePlaylist.style.display = "flex";
+
             if (item) {
                 if (type === "playlists") {
-                    menuOne.textContent = "Delete";
-                    menuTwo.textContent = "Remove playlists from profile";
+                    if (isCopied) {
+                        deleteBtn.style.display = "none";
+                        menuTwo.textContent = "Remove playlists from profile";
+                    } else {
+                        menuOne.textContent = "Delete";
+                        removePlaylist.style.display = "none";
+                    }
                 }
                 if (type === "album") {
                     menuOne.textContent = "Unlike";
@@ -305,6 +324,9 @@ export function handleTextMenuSlidebar() {
     });
 
     removePlaylist.addEventListener("click", () => {
+        if (currentId && type === "playlists") {
+            deleteBtn.click();
+        }
         if (currentId && type === "album") {
             const event = new CustomEvent("unfollow-album", {
                 detail: { id: currentId },

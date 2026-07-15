@@ -58,6 +58,7 @@ async function handleAddSongToPlaylist() {
     try {
         const response = await playlistApi.getPlaylistById(hitId);
         const playlist = response;
+        let copiedPlaylists = [];
 
         const cloneData = {
             id: playlist.id,
@@ -76,6 +77,19 @@ async function handleAddSongToPlaylist() {
         playlistsUI.renderPlaylistDetail(myNewPlaylist);
 
         showToast("Đã thêm vào Thư viện thành công!", "success");
+        try {
+            copiedPlaylists = JSON.parse(
+                localStorage.getItem("copiedPlaylists") || "[]",
+            );
+        } catch (e) {
+            copiedPlaylists = [];
+        }
+
+        copiedPlaylists.push(myNewPlaylist.id);
+        localStorage.setItem(
+            "copiedPlaylists",
+            JSON.stringify(copiedPlaylists),
+        );
     } catch (error) {
         console.error("Lỗi khi thêm playlist:", error);
         showToast("Có lỗi xảy ra khi thêm vào Thư viện!", "error");

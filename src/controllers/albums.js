@@ -80,12 +80,6 @@ async function handleFollowAlbum() {
     }
 }
 
-async function handleUnfollowAB(e) {
-    const album = e.target.closest("library-item");
-    const albumId = album?.getAttribute("data-id");
-    console.log(albumId);
-}
-
 document.addEventListener("unfollow-album", async (e) => {
     const id = e.detail.id;
     try {
