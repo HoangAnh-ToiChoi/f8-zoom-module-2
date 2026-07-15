@@ -79,3 +79,24 @@ async function handleFollowAlbum() {
         }
     }
 }
+
+async function handleUnfollowAB(e) {
+    const album = e.target.closest("library-item");
+    const albumId = album?.getAttribute("data-id");
+    console.log(albumId);
+}
+
+document.addEventListener("unfollow-album", async (e) => {
+    const id = e.detail.id;
+    try {
+        await albumApi.unlikeAlbum(id);
+        const item = document.querySelector(
+            `.library-item[data-id="${id}"][data-type="album"]`,
+        );
+        item.remove();
+        showToast("Đã xóa Album khỏi Thư viện thành công!", "success");
+    } catch (e) {
+        console.error("Lỗi khi xóa Album:", e);
+        showToast("Có lỗi xảy ra khi xóa Album!", "error");
+    }
+});

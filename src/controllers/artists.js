@@ -79,3 +79,17 @@ async function handleFollowArtist() {
         }
     }
 }
+document.addEventListener("unfollow-artist", async (e) => {
+    const id = e.detail.id;
+    try {
+        await artistsApi.unfollowArtist(id);
+        const item = document.querySelector(
+            `.library-item[data-id="${id}"][data-type="artist"]`,
+        );
+        item.remove();
+        showToast("Đã xóa nghệ sĩ khỏi Thư viện thành công!", "success");
+    } catch (e) {
+        console.error(e);
+        showToast("Có lỗi xảy ra khi xóa nghệ sĩ!", "error");
+    }
+});

@@ -13,5 +13,5 @@ export async function followArtist(id) {
 }
 
 export async function unfollowArtist(id) {
-    return await httpRequest.delete(`artists/${id}/follow`);
+    return await httpRequest.del(`artists/${id}/follow`);
 }

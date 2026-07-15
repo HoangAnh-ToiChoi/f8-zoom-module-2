@@ -13,5 +13,5 @@ export async function likeAlbum(id) {
 }
 
 export async function unlikeAlbum(id) {
-    return await httpRequest.delete(`albums/${id}/like`);
+    return await httpRequest.del(`albums/${id}/like`);
 }

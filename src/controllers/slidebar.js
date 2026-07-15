@@ -249,6 +249,8 @@ export function handleTextMenuSlidebar() {
     const removePlaylist = document.querySelector("#menu-two");
 
     let currentId = null;
+    let type = null;
+
     slidebar.addEventListener("contextmenu", (e) => {
         if (e.button === 2) {
             e.preventDefault();
@@ -256,12 +258,16 @@ export function handleTextMenuSlidebar() {
             const menuOne = document.querySelector("#menu-one span");
             const menuTwo = document.querySelector("#menu-two span");
             currentId = item?.getAttribute("data-id");
+            type = item?.getAttribute("data-type");
 
             if (item) {
-                const type = item.getAttribute("data-type");
                 if (type === "playlists") {
                     menuOne.textContent = "Delete";
-                    menuTwo.textContent = "Remove from profile";
+                    menuTwo.textContent = "Remove playlists from profile";
+                }
+                if (type === "album") {
+                    menuOne.textContent = "Unlike";
+                    menuTwo.textContent = "Remove from your library";
                 }
 
                 menu.style.display = "flex";
@@ -271,7 +277,7 @@ export function handleTextMenuSlidebar() {
         }
     });
 
-    deleteBtn.addEventListener("click", async (e) => {
+    deleteBtn.addEventListener("click", async () => {
         try {
             const response = await deletePlaylist(currentId);
             if (response.message === "Playlist deleted successfully") {
@@ -295,6 +301,21 @@ export function handleTextMenuSlidebar() {
             }
         } catch (e) {
             throw e;
+        }
+    });
+
+    removePlaylist.addEventListener("click", () => {
+        if (currentId && type === "album") {
+            const event = new CustomEvent("unfollow-album", {
+                detail: { id: currentId },
+            });
+            document.dispatchEvent(event);
+        }
+        if (currentId && type === "artist") {
+            const event = new CustomEvent("unfollow-artist", {
+                detail: { id: currentId },
+            });
+            document.dispatchEvent(event);
         }
     });
 }
