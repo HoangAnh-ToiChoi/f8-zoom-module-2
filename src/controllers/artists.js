@@ -50,7 +50,7 @@ export function handleTextMenu() {
         if (!artist) return;
         const artistId = artist.getAttribute("data-id");
         artistMenu.setAttribute("data-active-id", artistId || "");
-        console.log(artistMenu);
+
         if (e.button === 2) {
             artistMenu.style.display = "block";
             artistMenu.style.left = `${e.clientX}px`;

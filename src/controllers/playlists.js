@@ -60,6 +60,8 @@ async function handleAddSongToPlaylist() {
         const playlist = response;
         let copiedPlaylists = [];
 
+        const userData = JSON.parse(localStorage.getItem("user") || "{}");
+
         const cloneData = {
             id: playlist.id,
             name: playlist.name,

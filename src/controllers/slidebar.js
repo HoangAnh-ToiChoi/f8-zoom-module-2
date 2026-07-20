@@ -288,7 +288,10 @@ export function handleTextMenuSlidebar() {
                     menuOne.textContent = "Unlike";
                     menuTwo.textContent = "Remove from your library";
                 }
-
+                if (type === "artist") {
+                    deleteBtn.style.display = "none";
+                    menuTwo.textContent = "Remove from your library";
+                }
                 menu.style.display = "flex";
                 menu.style.top = `${e.clientY}px`;
                 menu.style.left = `${e.clientX}px`;
@@ -339,5 +342,30 @@ export function handleTextMenuSlidebar() {
             });
             document.dispatchEvent(event);
         }
+    });
+}
+
+export async function handleSearch() {
+    const searchLibrary = document.querySelector(".search-library");
+    const searchInput = document.querySelector("#sidebar-search-input");
+    if (!searchInput) return;
+    searchLibrary.classList.toggle("active-search");
+
+    if (searchLibrary.classList.contains("active-search")) {
+        searchInput.focus();
+    }
+
+    searchLibrary.addEventListener("keyup", (e) => {
+        const valueSearch = e.target.value.toLowerCase().trim();
+        const listItem = document.querySelectorAll(".library-item");
+        listItem.forEach((item) => {
+            const itemTile = item.querySelector(".item-title");
+            let title = itemTile.textContent.toLowerCase().trim();
+            if (!title.includes(valueSearch)) {
+                item.style.display = "none";
+            } else {
+                item.style.display = "flex";
+            }
+        });
     });
 }

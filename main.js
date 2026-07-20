@@ -150,6 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const menu = document.querySelector(".custom-context-menu");
     const navTab = document.querySelector(".nav-tabs");
     const albumsMenu = document.querySelector("#albums-context-menu");
+    const searchBtn = document.querySelector(".search-library-btn");
 
     const shuffleStored = localStorage.getItem("isShuffle") === "true";
     const rePeatStored = localStorage.getItem("isRepeat") === "true";
@@ -236,6 +237,8 @@ document.addEventListener("DOMContentLoaded", function () {
         albumsMenu.style.display = "none";
         menu.style.display = "none";
     };
+
+    searchBtn.addEventListener("click", slidebar.handleSearch);
 });
 
 // Other functionality
