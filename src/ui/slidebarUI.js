@@ -136,6 +136,10 @@ export function renderLibrary(items) {
 
     if (!libraryContent || !items) return;
 
+    const currentView = localStorage.getItem("sidebarView") || "list";
+
+    libraryContent.className = "library-content";
+    libraryContent.classList.add(`view-${currentView}`);
     libraryContent.innerHTML = "";
 
     const activeTab = document.querySelector(".nav-tabs .nav-tab.active");
@@ -143,7 +147,33 @@ export function renderLibrary(items) {
         ? activeTab.getAttribute("data-type")
         : "playlists";
 
-    items.forEach((item) => {
+    const currentSort = localStorage.getItem("sidebarSort") || "recents";
+    let sortedItem = [...items];
+    if (currentSort === "alphabetical") {
+        sortedItem.sort((a, b) => {
+            const nameA = (a.name || a.title || "").toLowerCase();
+            const nameB = (b.name || b.title || "").toLowerCase();
+            return nameA.localeCompare(nameB, "vi");
+        });
+    } else if (currentSort === "recently-added") {
+        sortedItem.reverse();
+    } else if (currentSort === "creator") {
+        sortedItem.sort((a, b) => {
+            const creatorA = (
+                a.user_username ||
+                a.artist_name ||
+                ""
+            ).toLowerCase();
+            const creatorB = (
+                b.user_username ||
+                b.artist_name ||
+                ""
+            ).toLowerCase();
+            return creatorA.localeCompare(creatorB, "vi");
+        });
+    }
+
+    sortedItem.forEach((item) => {
         const libraryItem = document.createElement("div");
         libraryItem.classList.add("library-item");
         libraryItem.setAttribute("data-id", item.id || "");

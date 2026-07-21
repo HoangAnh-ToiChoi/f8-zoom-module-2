@@ -14,6 +14,7 @@ let playlists = {
     is_public: true,
     image_url: null,
 };
+let isDropdownEventsInitialized = false;
 
 export async function showLibrarySlidebar(e) {
     const button = e.target.closest(".nav-tab");
@@ -44,7 +45,52 @@ export function handleLibrary(e) {
     const sortBtn = e.target.closest(".sort-btn");
     if (sortBtn) {
         slidebarUI.showLibraryFilter(e);
+        initDropdownEvents();
     }
+}
+
+function initDropdownEvents() {
+    if (isDropdownEventsInitialized) return;
+    isDropdownEventsInitialized = true;
+    const dropdownItems = document.querySelectorAll(
+        ".library-filter-dropdown .dropdown-list .dropdown-item",
+    );
+    dropdownItems.forEach((item) => {
+        item.addEventListener("click", () => {
+            const text = item.querySelector("span").textContent.trim();
+            let sortType = "recents";
+            if (text === "Mới thêm gần đây") sortType = "recently-added";
+            else if (text === "Thứ tự chữ cái") sortType = "alphabetical";
+            else if (text === "Người sáng tạo") sortType = "creator";
+            localStorage.setItem("sidebarSort", sortType);
+            dropdownItems.forEach((el) => {
+                el.classList.remove("active");
+                const icon = el.querySelector(".fa-check");
+                if (icon) icon.remove();
+            });
+            item.classList.add("active");
+            item.insertAdjacentHTML(
+                "beforeend",
+                `<i class="fas fa-check"></i>`,
+            );
+            slidebarUI.hideLibraryFilter();
+            initLibrary();
+        });
+    });
+    const viewButtons = document.querySelectorAll(
+        ".view-modes-container .view-mode-btn",
+    );
+    const viewModes = ["compact", "list", "grid", "large-grid"];
+    viewButtons.forEach((btn, index) => {
+        btn.addEventListener("click", () => {
+            const selectedMode = viewModes[index] || "list";
+            localStorage.setItem("sidebarView", selectedMode);
+            viewButtons.forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            slidebarUI.hideLibraryFilter();
+            initLibrary();
+        });
+    });
 }
 
 export function createPlayplist() {
@@ -345,27 +391,71 @@ export function handleTextMenuSlidebar() {
     });
 }
 
-export async function handleSearch() {
+export function handleSearch() {
     const searchLibrary = document.querySelector(".search-library");
     const searchInput = document.querySelector("#sidebar-search-input");
-    if (!searchInput) return;
+    if (!searchInput || !searchLibrary) return;
+
     searchLibrary.classList.toggle("active-search");
 
     if (searchLibrary.classList.contains("active-search")) {
         searchInput.focus();
+    } else {
+        searchInput.value = "";
+        resetSidebarDisplay();
     }
+}
 
-    searchLibrary.addEventListener("keyup", (e) => {
-        const valueSearch = e.target.value.toLowerCase().trim();
-        const listItem = document.querySelectorAll(".library-item");
-        listItem.forEach((item) => {
-            const itemTile = item.querySelector(".item-title");
-            let title = itemTile.textContent.toLowerCase().trim();
-            if (!title.includes(valueSearch)) {
-                item.style.display = "none";
-            } else {
-                item.style.display = "flex";
-            }
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.querySelector("#sidebar-search-input");
+    if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+            const valueSearch = e.target.value.toLowerCase().trim();
+            const listItem = document.querySelectorAll(".library-item");
+
+            const activeTab = document.querySelector(
+                ".nav-tabs .nav-tab.active",
+            );
+            const activeType = activeTab
+                ? activeTab.getAttribute("data-type")
+                : "playlists";
+
+            listItem.forEach((item) => {
+                const itemType = item.getAttribute("data-type");
+                const itemTile = item.querySelector(".item-title");
+                const title = itemTile
+                    ? itemTile.textContent.toLowerCase().trim()
+                    : "";
+
+                const isMatchTab =
+                    (activeType === "playlists" &&
+                        (itemType === "playlists" || itemType === "album")) ||
+                    (activeType === "artist" && itemType === "artist");
+
+                if (isMatchTab && title.includes(valueSearch)) {
+                    item.style.display = "flex";
+                } else {
+                    item.style.display = "none";
+                }
+            });
         });
+    }
+});
+
+function resetSidebarDisplay() {
+    const listItem = document.querySelectorAll(".library-item");
+    const activeTab = document.querySelector(".nav-tabs .nav-tab.active");
+    const activeType = activeTab
+        ? activeTab.getAttribute("data-type")
+        : "playlists";
+
+    listItem.forEach((item) => {
+        const itemType = item.getAttribute("data-type");
+        const isMatchTab =
+            (activeType === "playlists" &&
+                (itemType === "playlists" || itemType === "album")) ||
+            (activeType === "artist" && itemType === "artist");
+
+        item.style.display = isMatchTab ? "flex" : "none";
     });
 }
