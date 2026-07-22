@@ -2,7 +2,7 @@ import * as albumApi from "../api/albumsApi.js";
 import * as albumsUI from "../ui/albumsUI.js";
 import { getTracks } from "../api/trackApi.js";
 import { showToast } from "../utils/toast.js";
-import { showDetailView } from "../utils/uiHelpers.js";
+import { showDetailView, hideAllMenus } from "../utils/uiHelpers.js";
 import { addAlbumToSidebar } from "../ui/slidebarUI.js";
 
 export async function getAlbums() {
@@ -46,6 +46,8 @@ export function handleTextMenu() {
 
     ablumsGrid.addEventListener("contextmenu", (e) => {
         e.preventDefault();
+        e.stopPropagation();
+        hideAllMenus();
         const ablum = e.target.closest(".hit-card");
         if (!ablum) return;
         const albumId = ablum.getAttribute("data-id");

@@ -7,6 +7,7 @@ import {
 import { showToast } from "../utils/toast.js";
 import * as artistsApi from "../api/ArtistsApi.js";
 import * as albumsApi from "../api/albumsApi.js";
+import { hideAllMenus } from "../utils/uiHelpers.js";
 
 let playlists = {
     name: "My New Playlist",
@@ -42,6 +43,8 @@ export async function showLibrarySlidebar(e) {
 }
 
 export function handleLibrary(e) {
+    e.stopPropagation();
+    hideAllMenus();
     const sortBtn = e.target.closest(".sort-btn");
     if (sortBtn) {
         slidebarUI.showLibraryFilter(e);
@@ -304,6 +307,8 @@ export function handleTextMenuSlidebar() {
     slidebar.addEventListener("contextmenu", (e) => {
         if (e.button === 2) {
             e.preventDefault();
+            e.stopPropagation();
+            hideAllMenus();
             const item = e.target.closest(".library-item");
             const menuOne = document.querySelector("#menu-one span");
             const menuTwo = document.querySelector("#menu-two span");

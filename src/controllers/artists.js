@@ -2,7 +2,7 @@ import * as artistsApi from "../api/ArtistsApi.js";
 import * as artistsUI from "../ui/artistsUI.js";
 import { addArtistToSidebar } from "../ui/slidebarUI.js";
 import { getTracks } from "../api/trackApi.js";
-import { showDetailView } from "../utils/uiHelpers.js";
+import { showDetailView, hideAllMenus } from "../utils/uiHelpers.js";
 import { showToast } from "../utils/toast.js";
 
 export async function getArtists() {
@@ -46,6 +46,8 @@ export function handleTextMenu() {
 
     artistsGrid.addEventListener("contextmenu", (e) => {
         e.preventDefault();
+        e.stopPropagation();
+        hideAllMenus();
         const artist = e.target.closest(".artist-card");
         if (!artist) return;
         const artistId = artist.getAttribute("data-id");

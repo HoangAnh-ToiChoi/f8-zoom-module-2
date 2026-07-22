@@ -1,7 +1,7 @@
 import * as playlistApi from "../api/playlistsApi.js";
 import * as playlistsUI from "../ui/playlistsUI.js";
 import { addPlaylistToSidebar } from "../ui/slidebarUI.js";
-import { showDetailView } from "../utils/uiHelpers.js";
+import { showDetailView, hideAllMenus } from "../utils/uiHelpers.js";
 import { showToast } from "../utils/toast.js";
 
 export async function getPlaylists() {
@@ -34,6 +34,8 @@ export function handleTextMenu() {
 
     hitGird.addEventListener("contextmenu", (e) => {
         e.preventDefault();
+        e.stopPropagation();
+        hideAllMenus();
         const hit = e.target.closest(".hit-card");
         if (!hit) return;
         const hitId = hit.getAttribute("data-id");

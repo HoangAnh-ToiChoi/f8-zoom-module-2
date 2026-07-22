@@ -4,7 +4,7 @@ import * as storage from "./src/utils/stogare.js";
 import * as playlists from "./src/controllers/playlists.js";
 import * as albums from "./src/controllers/albums.js";
 import * as artists from "./src/controllers/artists.js";
-import { hideDetailView } from "./src/utils/uiHelpers.js";
+import { hideDetailView, hideAllMenus } from "./src/utils/uiHelpers.js";
 import * as player from "./src/controllers/player.js";
 import * as slidebar from "./src/controllers/slidebar.js";
 import { renderMusicByID } from "./src/ui/playerUI.js";
@@ -232,11 +232,10 @@ document.addEventListener("DOMContentLoaded", function () {
     player.handleVolume();
 
     document.onclick = () => {
-        hitMenu.style.display = "none";
-        artistMenu.style.display = "none";
-        albumsMenu.style.display = "none";
-        menu.style.display = "none";
+        hideAllMenus();
     };
+
+    window.addEventListener("scroll", hideAllMenus, true);
 
     searchBtn.addEventListener("click", slidebar.handleSearch);
 });
