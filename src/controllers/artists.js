@@ -1,4 +1,4 @@
-import * as artistsApi from "../api/ArtistsApi.js";
+import * as artistsApi from "../api/artistsApi.js";
 import * as artistsUI from "../ui/artistsUI.js";
 import { addArtistToSidebar } from "../ui/slidebarUI.js";
 import { getTracks } from "../api/trackApi.js";

@@ -5,7 +5,7 @@ import {
     deletePlaylist,
 } from "../api/playlistsApi.js";
 import { showToast } from "../utils/toast.js";
-import * as artistsApi from "../api/ArtistsApi.js";
+import * as artistsApi from "../api/artistsApi.js";
 import * as albumsApi from "../api/albumsApi.js";
 import { hideAllMenus } from "../utils/uiHelpers.js";
 
