@@ -7,7 +7,9 @@ import { showToast } from "../utils/toast.js";
 
 class ArtistsController {
     constructor() {
-        document.addEventListener("unfollow-artist", (e) => this.#handleUnfollowArtist(e));
+        document.addEventListener("unfollow-artist", (e) =>
+            this.#handleUnfollowArtist(e),
+        );
     }
 
     async getArtists() {
@@ -37,7 +39,9 @@ class ArtistsController {
     async getTracksByAr(artistId) {
         try {
             const { tracks } = await getTracks();
-            const filteredTracks = tracks.filter((tr) => tr.artist_id === artistId);
+            const filteredTracks = tracks.filter(
+                (tr) => tr.artist_id === artistId,
+            );
             artistsUI.renderTrackbyAr(filteredTracks);
         } catch (e) {
             console.error(e);
@@ -62,8 +66,19 @@ class ArtistsController {
 
             if (e.button === 2) {
                 artistMenu.style.display = "block";
-                artistMenu.style.left = `${e.clientX}px`;
-                artistMenu.style.top = `${e.clientY}px`;
+                let menuLeft = e.clientX;
+                let menuTop = e.clientY;
+                let menuWidth = artistMenu.offsetWidth;
+                let menuHeight = artistMenu.offsetHeight;
+
+                if (window.innerWidth - menuLeft < menuWidth) {
+                    menuLeft = menuLeft - menuWidth;
+                }
+                if (window.innerHeight - menuTop < menuHeight) {
+                    menuTop = menuTop - menuHeight;
+                }
+                artistMenu.style.left = `${menuLeft}px`;
+                artistMenu.style.top = `${menuTop}px`;
             }
         });
 

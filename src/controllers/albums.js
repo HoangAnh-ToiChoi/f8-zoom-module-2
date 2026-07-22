@@ -7,7 +7,9 @@ import { addAlbumToSidebar } from "../ui/slidebarUI.js";
 
 class AlbumsController {
     constructor() {
-        document.addEventListener("unfollow-album", (e) => this.#handleUnfollowAlbum(e));
+        document.addEventListener("unfollow-album", (e) =>
+            this.#handleUnfollowAlbum(e),
+        );
     }
 
     async getAlbums() {
@@ -37,7 +39,9 @@ class AlbumsController {
     async getTracksAB(albumId) {
         try {
             const { tracks } = await getTracks();
-            const filteredTracks = tracks.filter((tr) => tr.album_id === albumId);
+            const filteredTracks = tracks.filter(
+                (tr) => tr.album_id === albumId,
+            );
             albumsUI.renderTrackbyAB(filteredTracks);
         } catch (e) {
             console.log(e);
@@ -59,11 +63,22 @@ class AlbumsController {
             if (!ablum) return;
             const albumId = ablum.getAttribute("data-id");
             albumsMenu.setAttribute("data-active-id", albumId || "");
-            console.log(albumsMenu);
+
             if (e.button === 2) {
                 albumsMenu.style.display = "block";
-                albumsMenu.style.left = `${e.clientX}px`;
-                albumsMenu.style.top = `${e.clientY}px`;
+                let menuLeft = e.clientX;
+                let menuTop = e.clientY;
+                let menuWidth = addAlbum.offsetWidth;
+                let menuHeight = addAlbum.offsetHeight;
+
+                if (window.innerWidth - menuLeft < menuWidth) {
+                    menuLeft = menuLeft - menuWidth;
+                }
+                if (window.innerHeight - menuTop < menuHeight) {
+                    menuTop = menuTop - menuHeight;
+                }
+                albumsMenu.style.left = `${menuLeft}px`;
+                albumsMenu.style.top = `${menuTop}px`;
             }
         });
 

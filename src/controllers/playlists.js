@@ -46,12 +46,25 @@ class PlaylistsController {
 
             if (e.button === 2) {
                 hitMenu.style.display = "block";
-                hitMenu.style.left = `${e.clientX}px`;
-                hitMenu.style.top = `${e.clientY}px`;
+                let menuLeft = e.clientX;
+                let menuTop = e.clientY;
+                let menuWidth = hitMenu.offsetWidth;
+                let menuHeight = hitMenu.offsetHeight;
+
+                if (window.innerWidth - menuLeft < menuWidth) {
+                    menuLeft = menuLeft - menuWidth;
+                }
+                if (window.innerHeight - menuTop < menuHeight) {
+                    menuTop = menuTop - menuHeight;
+                }
+                hitMenu.style.left = `${menuLeft}px`;
+                hitMenu.style.top = `${menuTop}px`;
             }
         });
 
-        addPlaylist.addEventListener("click", () => this.#handleAddSongToPlaylist());
+        addPlaylist.addEventListener("click", () =>
+            this.#handleAddSongToPlaylist(),
+        );
     }
 
     async #handleAddSongToPlaylist() {
