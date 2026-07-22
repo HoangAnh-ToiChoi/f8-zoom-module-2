@@ -30,5 +30,5 @@ export function LoginUI(user) {
 export function logoutUI() {
     document.querySelector(".auth-buttons").style.display = "flex";
     document.querySelector(".user-avatar img").src =
-        "../../placeholder.svg?height=32&width=32";
+        "./placeholder.svg?height=32&width=32";
 }
