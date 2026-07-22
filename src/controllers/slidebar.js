@@ -116,7 +116,13 @@ class SidebarController {
         const btnSave = document.getElementById("playlist-save-btn");
 
         createBtn.addEventListener("click", () => {
-            slidebarUI.showPlaylistDetail();
+            this.#playlists = {
+                name: "My New Playlist",
+                description: "Playlist description",
+                is_public: true,
+                image_url: null,
+            };
+            slidebarUI.renderPlaylistDetail(this.#playlists);
         });
 
         title.addEventListener("click", () => {
