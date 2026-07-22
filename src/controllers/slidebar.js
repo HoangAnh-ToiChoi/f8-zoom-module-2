@@ -351,7 +351,7 @@ class SidebarController {
                     if (this.#type === "artist") {
                         menuOne.textContent = "Remove from your library";
                     }
-                    menu.style.display = "flex";
+                    menu.style.display = "block";
                     menu.style.top = `${e.clientY}px`;
                     menu.style.left = `${e.clientX}px`;
                 }
