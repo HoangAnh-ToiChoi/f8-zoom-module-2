@@ -10,6 +10,9 @@ class AlbumsController {
         document.addEventListener("unfollow-album", (e) =>
             this.#handleUnfollowAlbum(e),
         );
+        document.addEventListener("albumClick", (e) =>
+            this.showAlbumDetailById(e.detail.id),
+        );
     }
 
     async getAlbums() {
@@ -26,6 +29,10 @@ class AlbumsController {
         if (!hit) return;
 
         const albumId = hit.getAttribute("data-id");
+        this.showAlbumDetailById(albumId);
+    }
+
+    async showAlbumDetailById(albumId) {
         showDetailView("albums", albumId);
         try {
             const response = await albumApi.getAlbumById(albumId);

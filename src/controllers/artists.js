@@ -10,6 +10,9 @@ class ArtistsController {
         document.addEventListener("unfollow-artist", (e) =>
             this.#handleUnfollowArtist(e),
         );
+        document.addEventListener("artistClick", (e) =>
+            this.showArtistDetailById(e.detail.id),
+        );
     }
 
     async getArtists() {
@@ -26,6 +29,10 @@ class ArtistsController {
         if (!artists) return;
 
         const artistId = artists.getAttribute("data-id");
+        this.showArtistDetailById(artistId);
+    }
+
+    async showArtistDetailById(artistId) {
         showDetailView("artist", artistId);
         try {
             const response = await artistsApi.getArtistsById(artistId);

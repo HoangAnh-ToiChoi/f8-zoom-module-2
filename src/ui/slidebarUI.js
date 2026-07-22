@@ -72,6 +72,8 @@ export function renderPlaylistDetail(playlist) {
     const typeTxt = detailContainer.querySelector("#playlist-hero-type");
     const titleTxt = detailContainer.querySelector("#playlist-hero-title");
     const descTxt = detailContainer.querySelector("#playlist-hero-desc");
+    const ownerAvatar = detailContainer.querySelector(".owner-avatar");
+    const ownerName = detailContainer.querySelector(".owner-name");
 
     if (typeTxt) {
         typeTxt.textContent = playlist.is_public
@@ -80,6 +82,20 @@ export function renderPlaylistDetail(playlist) {
     }
     if (titleTxt) {
         titleTxt.textContent = playlist.name || "Danh sách phát của tôi";
+    }
+
+    if (ownerName && ownerAvatar) {
+        const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+        const isMyPlaylist = !playlist.user_id || String(playlist.user_id) === String(currentUser.id);
+
+        if (isMyPlaylist) {
+            ownerName.textContent = "Hoàng Anh";
+            ownerAvatar.src = "./src/public/imgs/user.png";
+            ownerAvatar.style.display = "inline-block";
+        } else {
+            ownerName.textContent = playlist.user_username || "";
+            ownerAvatar.style.display = "none";
+        }
     }
     if (descTxt) {
         if (playlist.description) {
