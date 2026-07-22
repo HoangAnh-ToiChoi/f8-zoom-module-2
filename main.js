@@ -1,17 +1,15 @@
 import * as login from "./src/auth/auth.js";
 import * as register from "./src/auth/register.js";
 import * as storage from "./src/utils/stogare.js";
-import * as playlists from "./src/controllers/playlists.js";
-import * as albums from "./src/controllers/albums.js";
-import * as artists from "./src/controllers/artists.js";
+import { playlistsController } from "./src/controllers/playlists.js";
+import { albumsController } from "./src/controllers/albums.js";
+import { artistsController } from "./src/controllers/artists.js";
 import { hideDetailView, hideAllMenus } from "./src/utils/uiHelpers.js";
-import * as player from "./src/controllers/player.js";
-import * as slidebar from "./src/controllers/slidebar.js";
+import { playerController } from "./src/controllers/player.js";
+import { sidebarController } from "./src/controllers/slidebar.js";
 import { renderMusicByID } from "./src/ui/playerUI.js";
 
-// Auth Modal Functionality
 document.addEventListener("DOMContentLoaded", async function () {
-    // Get DOM elements
     const signupBtn = document.querySelector(".signup-btn");
     const loginBtn = document.querySelector(".login-btn");
     const authModal = document.getElementById("authModal");
@@ -20,122 +18,19 @@ document.addEventListener("DOMContentLoaded", async function () {
     const loginForm = document.getElementById("loginForm");
     const showLoginBtn = document.getElementById("showLogin");
     const showSignupBtn = document.getElementById("showSignup");
+    
     const albumsGrid = document.querySelector(".albums-grid");
     const artistsGrid = document.querySelector(".artists-grid");
     const trackList = document.querySelector(".track-list");
     const hitsGrid = document.querySelector(".hits-grid");
-    const currentTrack = localStorage.getItem("currentTrack");
-    const timeCurrent = localStorage.getItem("timeCurrrent");
-    const volume = localStorage.getItem("volume");
-
-    if (currentTrack && timeCurrent) {
-        await renderMusicByID(currentTrack, timeCurrent);
-        player.audio.volume = Number(volume);
-        const volumeFill = document.querySelector(".volume-fill");
-        if (volumeFill) {
-            volumeFill.style.width = `${volume * 100}%`;
-        }
-    }
-    // Function to show signup form
-    function showSignupForm() {
-        signupForm.style.display = "block";
-        loginForm.style.display = "none";
-    }
-
-    // Function to show login form
-    function showLoginForm() {
-        signupForm.style.display = "none";
-        loginForm.style.display = "block";
-    }
-
-    // Function to open modal
-    function openModal() {
-        authModal.classList.add("show");
-        document.body.style.overflow = "hidden"; // Prevent background scrolling
-    }
-
-    // Open modal with Sign Up form when clicking Sign Up button
-    signupBtn.addEventListener("click", function () {
-        showSignupForm();
-        openModal();
-    });
-
-    // Open modal with Login form when clicking Login button
-    loginBtn.addEventListener("click", function () {
-        showLoginForm();
-        openModal();
-    });
-
-    // Close modal function
-    function closeModal() {
-        authModal.classList.remove("show");
-        document.body.style.overflow = "auto"; // Restore scrolling
-    }
-
-    // Close modal when clicking close button
-    modalClose.addEventListener("click", closeModal);
-
-    // Close modal when clicking overlay (outside modal container)
-    authModal.addEventListener("click", function (e) {
-        if (e.target === authModal) {
-            closeModal();
-        }
-    });
-
-    // Close modal with Escape key
-    document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && authModal.classList.contains("show")) {
-            closeModal();
-        }
-    });
-
-    // Switch to Login form
-    showLoginBtn.addEventListener("click", function () {
-        showLoginForm();
-    });
-
-    // Switch to Signup form
-    showSignupBtn.addEventListener("click", function () {
-        showSignupForm();
-    });
-
-    // Signup form submit
-    signupForm.addEventListener("submit", async function (e) {
-        e.preventDefault();
-        await register.register();
-        await checkAuthState();
-        closeModal();
-    });
-
-    loginForm.addEventListener("submit", async function (e) {
-        e.preventDefault();
-        await login.handleLogin();
-        login.checkAuthState();
-        closeModal();
-    });
-
-    albumsGrid.addEventListener("click", albums.playAB);
-    artistsGrid.addEventListener("click", artists.playAr);
-    trackList.addEventListener("click", player.getMusic);
-    hitsGrid.addEventListener("click", playlists.ChosePlaylist);
-    slidebar.createPlayplist();
-
-    slidebar.handleTextMenuSlidebar();
-
-    playlists.handleTextMenu();
-
-    artists.handleTextMenu();
-
-    albums.handleTextMenu();
-});
-
-// User Menu Dropdown Functionality
-document.addEventListener("DOMContentLoaded", function () {
+    
     const userAvatar = document.getElementById("userAvatar");
     const userDropdown = document.getElementById("userDropdown");
     const logoutBtn = document.getElementById("logoutBtn");
+    
     const homeBtn = document.querySelector(".home-btn");
     const logo = document.querySelector(".logo i");
+    
     const playBtn = document.querySelector(".play-btn");
     const shuffleBtn = document.querySelector(".shuffle");
     const preBtn = document.querySelector(".pre-btn");
@@ -143,93 +38,189 @@ document.addEventListener("DOMContentLoaded", function () {
     const playBtnLarge = document.querySelector(".play-btn-large");
     const repeatBtn = document.querySelector(".repeat");
     const muteBtn = document.querySelector(".mute-btn");
+    
     const sortBtn = document.querySelector(".sort-btn");
-    const slideContent = document.querySelector(".library-content");
-    const hitMenu = document.getElementById("hits-context-menu");
-    const artistMenu = document.querySelector(".context-menu");
-    const menu = document.querySelector(".custom-context-menu");
     const navTab = document.querySelector(".nav-tabs");
-    const albumsMenu = document.querySelector("#albums-context-menu");
     const searchBtn = document.querySelector(".search-library-btn");
 
+    const currentTrack = localStorage.getItem("currentTrack");
+    const timeCurrent = localStorage.getItem("timeCurrrent");
+    const volume = localStorage.getItem("volume");
     const shuffleStored = localStorage.getItem("isShuffle") === "true";
     const rePeatStored = localStorage.getItem("isRepeat") === "true";
 
-    if (shuffleStored) {
+    if (currentTrack && timeCurrent) {
+        await renderMusicByID(currentTrack, timeCurrent);
+        playerController.audio.volume = Number(volume);
+        const volumeFill = document.querySelector(".volume-fill");
+        if (volumeFill) {
+            volumeFill.style.width = `${volume * 100}%`;
+        }
+    }
+
+    if (shuffleStored && shuffleBtn) {
         shuffleBtn.classList.add("active");
     }
 
-    if (rePeatStored) {
+    if (rePeatStored && repeatBtn) {
         repeatBtn.classList.add("active");
     }
 
-    // Toggle dropdown when clicking avatar
-    userAvatar.addEventListener("click", function (e) {
-        e.stopPropagation();
-        if (storage.getToken() && storage.getUser()) {
-            userDropdown.classList.toggle("show");
+    function showSignupForm() {
+        signupForm.style.display = "block";
+        loginForm.style.display = "none";
+    }
+
+    function showLoginForm() {
+        signupForm.style.display = "none";
+        loginForm.style.display = "block";
+    }
+
+    function openModal() {
+        authModal.classList.add("show");
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+        authModal.classList.remove("show");
+        document.body.style.overflow = "auto";
+    }
+
+    if (signupBtn) {
+        signupBtn.addEventListener("click", () => {
+            showSignupForm();
+            openModal();
+        });
+    }
+
+    if (loginBtn) {
+        loginBtn.addEventListener("click", () => {
+            showLoginForm();
+            openModal();
+        });
+    }
+
+    if (modalClose) modalClose.addEventListener("click", closeModal);
+
+    if (authModal) {
+        authModal.addEventListener("click", (e) => {
+            if (e.target === authModal) closeModal();
+        });
+    }
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && authModal && authModal.classList.contains("show")) {
+            closeModal();
         }
     });
 
-    // Close dropdown when clicking outside
-    document.addEventListener("click", function (e) {
+    if (showLoginBtn) showLoginBtn.addEventListener("click", showLoginForm);
+    if (showSignupBtn) showSignupBtn.addEventListener("click", showSignupForm);
+
+    if (signupForm) {
+        signupForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            await register.register();
+            await login.checkAuthState();
+            closeModal();
+        });
+    }
+
+    if (loginForm) {
+        loginForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            await login.handleLogin();
+            login.checkAuthState();
+            closeModal();
+        });
+    }
+
+    if (userAvatar) {
+        userAvatar.addEventListener("click", (e) => {
+            e.stopPropagation();
+            if (storage.getToken() && storage.getUser() && userDropdown) {
+                userDropdown.classList.toggle("show");
+            }
+        });
+    }
+
+    document.addEventListener("click", (e) => {
         if (
-            !userAvatar.contains(e.target) &&
-            !userDropdown.contains(e.target)
+            userAvatar && !userAvatar.contains(e.target) &&
+            userDropdown && !userDropdown.contains(e.target)
         ) {
             userDropdown.classList.remove("show");
         }
     });
 
-    // Close dropdown when pressing Escape
-    document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && userDropdown.classList.contains("show")) {
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && userDropdown && userDropdown.classList.contains("show")) {
             userDropdown.classList.remove("show");
         }
     });
 
-    // Handle logout button click
-    logoutBtn.addEventListener("click", function () {
-        // Close dropdown first
-        userDropdown.classList.remove("show");
-        login.handleLogout();
-    });
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            if (userDropdown) userDropdown.classList.remove("show");
+            login.handleLogout();
+        });
+    }
 
-    homeBtn.addEventListener("click", hideDetailView);
+    if (homeBtn) homeBtn.addEventListener("click", hideDetailView);
+    if (logo) logo.addEventListener("click", hideDetailView);
 
-    logo.addEventListener("click", hideDetailView);
+    if (albumsGrid) albumsGrid.addEventListener("click", (e) => albumsController.playAB(e));
+    if (artistsGrid) artistsGrid.addEventListener("click", (e) => artistsController.playAr(e));
+    if (trackList) trackList.addEventListener("click", (e) => playerController.getMusic(e));
+    if (hitsGrid) hitsGrid.addEventListener("click", (e) => playlistsController.ChosePlaylist(e));
 
-    playBtn.addEventListener("click", player.handleSong);
+    if (playBtn) playBtn.addEventListener("click", () => playerController.handleSong());
 
-    shuffleBtn.addEventListener("click", () => {
-        player.toggleShuffle();
-        const isShuffle = shuffleBtn.classList.contains("active");
-        localStorage.setItem("isShuffle", isShuffle);
-    });
+    if (shuffleBtn) {
+        shuffleBtn.addEventListener("click", () => {
+            playerController.toggleShuffle();
+            const isShuffle = shuffleBtn.classList.contains("active");
+            localStorage.setItem("isShuffle", isShuffle);
+        });
+    }
 
-    nextBtn.addEventListener("click", () => {
-        player.handleForwardSong(1);
-    });
+    if (nextBtn) {
+        nextBtn.addEventListener("click", () => {
+            playerController.handleForwardSong(1);
+        });
+    }
 
-    preBtn.addEventListener("click", () => {
-        player.handleForwardSong(-1);
-    });
+    if (preBtn) {
+        preBtn.addEventListener("click", () => {
+            playerController.handleForwardSong(-1);
+        });
+    }
 
-    playBtnLarge.addEventListener("click", player.handleAllSong);
+    if (playBtnLarge) {
+        playBtnLarge.addEventListener("click", (e) => playerController.handleAllSong(e));
+    }
 
-    repeatBtn.addEventListener("click", () => {
-        player.handleRepeatSong();
-        const isRepeat = repeatBtn.classList.contains("active");
-        localStorage.setItem("isRepeat", isRepeat);
-    });
+    if (repeatBtn) {
+        repeatBtn.addEventListener("click", () => {
+            playerController.handleRepeatSong();
+            const isRepeat = repeatBtn.classList.contains("active");
+            localStorage.setItem("isRepeat", isRepeat);
+        });
+    }
 
-    muteBtn.addEventListener("click", player.handleMute);
+    if (muteBtn) muteBtn.addEventListener("click", () => playerController.handleMute());
+    
+    playerController.handleVolume();
 
-    sortBtn.addEventListener("click", slidebar.handleLibrary);
+    if (sortBtn) sortBtn.addEventListener("click", (e) => sidebarController.handleLibrary(e));
+    if (navTab) navTab.addEventListener("click", (e) => sidebarController.showLibrarySlidebar(e));
+    if (searchBtn) searchBtn.addEventListener("click", () => sidebarController.handleSearch());
 
-    navTab.addEventListener("click", slidebar.showLibrarySlidebar);
-
-    player.handleVolume();
+    sidebarController.createPlayplist();
+    sidebarController.handleTextMenuSlidebar();
+    playlistsController.handleTextMenu();
+    artistsController.handleTextMenu();
+    albumsController.handleTextMenu();
 
     document.onclick = () => {
         hideAllMenus();
@@ -237,15 +228,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.addEventListener("scroll", hideAllMenus, true);
 
-    searchBtn.addEventListener("click", slidebar.handleSearch);
-});
-
-// Other functionality
-document.addEventListener("DOMContentLoaded", async function () {
-    // TODO: Implement other functionality here
     await login.checkAuthState();
-    await playlists.getPlaylists();
-    await slidebar.initLibrary();
-    await albums.getAlbums();
-    await artists.getArtists();
+    await playlistsController.getPlaylists();
+    await sidebarController.initLibrary();
+    await albumsController.getAlbums();
+    await artistsController.getArtists();
 });

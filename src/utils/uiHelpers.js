@@ -1,4 +1,4 @@
-import { audio, isPlayingSource } from "../controllers/player.js";
+import { playerController } from "../controllers/player.js";
 
 export function showDetailView(type, id) {
     const hitsSection = document.querySelector(".hits-section");
@@ -19,7 +19,7 @@ export function showDetailView(type, id) {
 
     const playBtnLarge = document.querySelector(".play-btn-large");
     if (playBtnLarge) {
-        if (isPlayingSource(type, id)) {
+        if (playerController.isPlayingSource(type, id)) {
             playBtnLarge.innerHTML = `<i class="fas fa-pause"></i>`;
         } else {
             playBtnLarge.innerHTML = `<i class="fas fa-play"></i>`;
@@ -46,7 +46,10 @@ export function hideDetailView() {
 export function hideAllMenus() {
     const menus = document.querySelectorAll(".popup-menu");
     menus.forEach((menu) => {
-        menu.style.display = "none";
-        menu.classList.remove("active", "show");
+        if (menu.id.includes("context-menu") || menu.className.includes("context-menu")) {
+            menu.style.display = "none";
+        } else {
+            menu.classList.remove("active", "show");
+        }
     });
 }

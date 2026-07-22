@@ -1191,8 +1191,8 @@
 }
 
 /* Special Icons Color */
-.context-menu-item i.fa-times {
-    color: var(--accent-primary); /* Icon X màu xanh lá Spotify */
+.context-menu-item i.fa-plus {
+    color: var(--accent-primary);
 }
 
 .context-menu-item i.fa-ban,
