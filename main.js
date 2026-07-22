@@ -122,6 +122,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             e.preventDefault();
             await register.register();
             await login.checkAuthState();
+            if (storage.getToken() && storage.getUser()) {
+                sidebarController.initLibrary();
+            }
             closeModal();
         });
     }
@@ -131,6 +134,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             e.preventDefault();
             await login.handleLogin();
             login.checkAuthState();
+            if (storage.getToken() && storage.getUser()) {
+                sidebarController.initLibrary();
+            }
             closeModal();
         });
     }
@@ -163,6 +169,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         logoutBtn.addEventListener("click", () => {
             if (userDropdown) userDropdown.classList.remove("show");
             login.handleLogout();
+            sidebarController.initLibrary();
         });
     }
 
