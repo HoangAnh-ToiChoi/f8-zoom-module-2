@@ -18,19 +18,19 @@ document.addEventListener("DOMContentLoaded", async function () {
     const loginForm = document.getElementById("loginForm");
     const showLoginBtn = document.getElementById("showLogin");
     const showSignupBtn = document.getElementById("showSignup");
-    
+
     const albumsGrid = document.querySelector(".albums-grid");
     const artistsGrid = document.querySelector(".artists-grid");
     const trackList = document.querySelector(".track-list");
     const hitsGrid = document.querySelector(".hits-grid");
-    
+
     const userAvatar = document.getElementById("userAvatar");
     const userDropdown = document.getElementById("userDropdown");
     const logoutBtn = document.getElementById("logoutBtn");
-    
+
     const homeBtn = document.querySelector(".home-btn");
     const logo = document.querySelector(".logo i");
-    
+
     const playBtn = document.querySelector(".play-btn");
     const shuffleBtn = document.querySelector(".shuffle");
     const preBtn = document.querySelector(".pre-btn");
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const playBtnLarge = document.querySelector(".play-btn-large");
     const repeatBtn = document.querySelector(".repeat");
     const muteBtn = document.querySelector(".mute-btn");
-    
+
     const sortBtn = document.querySelector(".sort-btn");
     const navTab = document.querySelector(".nav-tabs");
     const searchBtn = document.querySelector(".search-library-btn");
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     if (signupBtn) {
-        signupBtn.addEventListener("click", () => {
+        signupBtn.addEventListener("mousedown", () => {
             showSignupForm();
             openModal();
         });
@@ -109,7 +109,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && authModal && authModal.classList.contains("show")) {
+        if (
+            e.key === "Escape" &&
+            authModal &&
+            authModal.classList.contains("show")
+        ) {
             closeModal();
         }
     });
@@ -120,18 +124,21 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (signupForm) {
         signupForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            await register.register();
-            await login.checkAuthState();
-            if (storage.getToken() && storage.getUser()) {
-                sidebarController.initLibrary();
+            const isSuccess = await register.register();
+            if (isSuccess) {
+                await login.checkAuthState();
+                if (storage.getToken() && storage.getUser()) {
+                    sidebarController.initLibrary();
+                }
+                closeModal();
             }
-            closeModal();
         });
     }
 
     if (loginForm) {
         loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
+
             await login.handleLogin();
             login.checkAuthState();
             if (storage.getToken() && storage.getUser()) {
@@ -152,15 +159,21 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     document.addEventListener("click", (e) => {
         if (
-            userAvatar && !userAvatar.contains(e.target) &&
-            userDropdown && !userDropdown.contains(e.target)
+            userAvatar &&
+            !userAvatar.contains(e.target) &&
+            userDropdown &&
+            !userDropdown.contains(e.target)
         ) {
             userDropdown.classList.remove("show");
         }
     });
 
     document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && userDropdown && userDropdown.classList.contains("show")) {
+        if (
+            e.key === "Escape" &&
+            userDropdown &&
+            userDropdown.classList.contains("show")
+        ) {
             userDropdown.classList.remove("show");
         }
     });
@@ -176,12 +189,23 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (homeBtn) homeBtn.addEventListener("click", hideDetailView);
     if (logo) logo.addEventListener("click", hideDetailView);
 
-    if (albumsGrid) albumsGrid.addEventListener("click", (e) => albumsController.playAB(e));
-    if (artistsGrid) artistsGrid.addEventListener("click", (e) => artistsController.playAr(e));
-    if (trackList) trackList.addEventListener("click", (e) => playerController.getMusic(e));
-    if (hitsGrid) hitsGrid.addEventListener("click", (e) => playlistsController.ChosePlaylist(e));
+    if (albumsGrid)
+        albumsGrid.addEventListener("click", (e) => albumsController.playAB(e));
+    if (artistsGrid)
+        artistsGrid.addEventListener("click", (e) =>
+            artistsController.playAr(e),
+        );
+    if (trackList)
+        trackList.addEventListener("click", (e) =>
+            playerController.getMusic(e),
+        );
+    if (hitsGrid)
+        hitsGrid.addEventListener("click", (e) =>
+            playlistsController.ChosePlaylist(e),
+        );
 
-    if (playBtn) playBtn.addEventListener("click", () => playerController.handleSong());
+    if (playBtn)
+        playBtn.addEventListener("click", () => playerController.handleSong());
 
     if (shuffleBtn) {
         shuffleBtn.addEventListener("click", () => {
@@ -204,7 +228,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     if (playBtnLarge) {
-        playBtnLarge.addEventListener("click", (e) => playerController.handleAllSong(e));
+        playBtnLarge.addEventListener("click", (e) =>
+            playerController.handleAllSong(e),
+        );
     }
 
     if (repeatBtn) {
@@ -215,13 +241,23 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
-    if (muteBtn) muteBtn.addEventListener("click", () => playerController.handleMute());
-    
+    if (muteBtn)
+        muteBtn.addEventListener("click", () => playerController.handleMute());
+
     playerController.handleVolume();
 
-    if (sortBtn) sortBtn.addEventListener("click", (e) => sidebarController.handleLibrary(e));
-    if (navTab) navTab.addEventListener("click", (e) => sidebarController.showLibrarySlidebar(e));
-    if (searchBtn) searchBtn.addEventListener("click", () => sidebarController.handleSearch());
+    if (sortBtn)
+        sortBtn.addEventListener("click", (e) =>
+            sidebarController.handleLibrary(e),
+        );
+    if (navTab)
+        navTab.addEventListener("click", (e) =>
+            sidebarController.showLibrarySlidebar(e),
+        );
+    if (searchBtn)
+        searchBtn.addEventListener("click", () =>
+            sidebarController.handleSearch(),
+        );
 
     sidebarController.createPlayplist();
     sidebarController.handleTextMenuSlidebar();

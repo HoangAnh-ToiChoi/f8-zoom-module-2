@@ -4,13 +4,17 @@ import { showError, clearError, LoginUI, logoutUI } from "../ui/authUI.js";
 
 export async function checkAuthState() {
     const token = storage.getToken();
-    const user = storage.getUser();
-    if (token && user) {
-        LoginUI(user);
+    const localUser = storage.getUser();
+    if (token && localUser) {
+        LoginUI(localUser);
         try {
             const { user } = await currentUser();
             if (user) {
+                if (!user.username && localUser.username) {
+                    user.username = localUser.username;
+                }
                 storage.setUser(user);
+                LoginUI(user);
             }
         } catch (e) {
             storage.removeAccount();

@@ -16,8 +16,13 @@ export function setUser(user) {
     localStorage.setItem(keys.user, JSON.stringify(user));
 }
 
-export function getUser(user) {
-    return localStorage.getItem(keys.user, JSON.stringify(user));
+export function getUser() {
+    const userStr = localStorage.getItem(keys.user);
+    try {
+        return userStr ? JSON.parse(userStr) : null;
+    } catch (e) {
+        return null;
+    }
 }
 
 export function removeAccount() {
